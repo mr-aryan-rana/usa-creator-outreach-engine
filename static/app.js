@@ -258,10 +258,10 @@ document.addEventListener("DOMContentLoaded", () => {
         <td><code>#${item.id}</code></td>
         <td><strong>${escapeHtml(item.name || "Unknown")}</strong></td>
         <td><span class="platform-badge ${platformClass}">${item.platform || "social"}</span></td>
-        <td><a href="${escapeHtml(item.profile_url || '#')}" target="_blank" style="color: var(--accent-cyan); text-decoration: none;"><i class="fa-solid fa-link"></i> ${escapeHtml(item.profile_url ? item.profile_url.substring(0, 32) + '...' : 'N/A')}</a></td>
+        <td><a href="${escapeHtml(item.profile_url || '#')}" target="_blank" style="color: var(--accent-cyan); text-decoration: none;"><i class="fa-solid fa-link"></i> ${escapeHtml(item.profile_url ? item.profile_url.substring(0, 20) + '...' : 'N/A')}</a></td>
         <td><code>${escapeHtml(item.email_address || "N/A")}</code></td>
         <td>${escapeHtml(item.phone || "N/A")}</td>
-        <td><span class="${isValid ? 'badge-valid' : 'badge-pending'}">${isValid ? '✓ 250 OK (SMTP Handshake Passed)' : 'Pending SMTP Validation'}</span></td>
+        <td><span class="${isValid ? 'badge-valid' : 'badge-pending'}">${isValid ? '✓ 250 OK' : 'Pending'}</span></td>
         <td>${escapeHtml(item.location || "USA")}</td>
         <td>${item.created_at ? new Date(item.created_at).toLocaleDateString() : 'N/A'}</td>
         <td>

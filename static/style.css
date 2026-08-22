@@ -395,32 +395,39 @@ body {
   width: 100%;
   border-collapse: collapse;
   text-align: left;
-  font-size: 0.88rem;
+  font-size: 0.78rem;
 }
 
 .data-table th {
   background: rgba(255, 255, 255, 0.02);
   color: var(--text-muted);
-  font-weight: 600;
-  padding: 0.85rem 1rem;
+  font-weight: 700;
+  padding: 0.55rem 0.6rem;
   border-bottom: 1px solid var(--border-card);
   text-transform: uppercase;
-  font-size: 0.75rem;
-  letter-spacing: 0.05em;
+  font-size: 0.68rem;
+  letter-spacing: 0.04em;
+  white-space: nowrap;
 }
 
-.data-table td { padding: 0.95rem 1rem; border-bottom: 1px solid var(--border-card); }
-.data-table tr:hover { background: rgba(255, 255, 255, 0.02); }
+.data-table td {
+  padding: 0.45rem 0.6rem;
+  border-bottom: 1px solid var(--border-card);
+  font-size: 0.78rem;
+  white-space: nowrap;
+}
+
+.data-table tr:hover { background: rgba(255, 255, 255, 0.03); }
 
 .platform-badge {
-  padding: 0.25rem 0.65rem;
-  border-radius: 6px;
-  font-size: 0.75rem;
+  padding: 0.15rem 0.45rem;
+  border-radius: 4px;
+  font-size: 0.68rem;
   font-weight: 700;
   text-transform: uppercase;
   display: inline-flex;
   align-items: center;
-  gap: 0.35rem;
+  gap: 0.25rem;
 }
 
 .badge-instagram { background: rgba(225, 48, 108, 0.2); color: #f472b6; border: 1px solid rgba(225, 48, 108, 0.3); }
@@ -428,8 +435,8 @@ body {
 .badge-facebook { background: rgba(24, 119, 242, 0.2); color: #60a5fa; border: 1px solid rgba(24, 119, 242, 0.3); }
 .badge-youtube { background: rgba(255, 0, 0, 0.2); color: #f87171; border: 1px solid rgba(255, 0, 0, 0.3); }
 
-.badge-valid { background: rgba(16, 185, 129, 0.2); color: var(--secondary); border: 1px solid rgba(16, 185, 129, 0.3); padding: 0.2rem 0.5rem; border-radius: 4px; font-size: 0.75rem; }
-.badge-pending { background: rgba(245, 158, 11, 0.2); color: var(--accent-amber); border: 1px solid rgba(245, 158, 11, 0.3); padding: 0.2rem 0.5rem; border-radius: 4px; font-size: 0.75rem; }
+.badge-valid { background: rgba(16, 185, 129, 0.2); color: var(--secondary); border: 1px solid rgba(16, 185, 129, 0.3); padding: 0.15rem 0.4rem; border-radius: 4px; font-size: 0.68rem; }
+.badge-pending { background: rgba(245, 158, 11, 0.2); color: var(--accent-amber); border: 1px solid rgba(245, 158, 11, 0.3); padding: 0.15rem 0.4rem; border-radius: 4px; font-size: 0.68rem; }
 
 /* Creator Database Search & Filter Controls */
 .search-bar-container {

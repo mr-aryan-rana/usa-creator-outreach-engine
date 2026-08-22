@@ -60,10 +60,26 @@ function buildSearchQuery({ platform = 'instagram', stateCode = 'CA', tag = 'lov
   return `${siteFilter} "${cleanTag}" "@gmail.com" "${stateName}"`;
 }
 
+function saveCategories(categoriesList) {
+  const p = path.join(dataDir, 'categories.json');
+  fs.writeFileSync(p, JSON.stringify(categoriesList, null, 2), 'utf8');
+  CATEGORIES.length = 0;
+  categoriesList.forEach(c => CATEGORIES.push(c));
+}
+
+function saveStates(statesList) {
+  const p = path.join(dataDir, 'usa_states.json');
+  fs.writeFileSync(p, JSON.stringify(statesList, null, 2), 'utf8');
+  STATES.length = 0;
+  statesList.forEach(s => STATES.push(s));
+}
+
 module.exports = {
   STATES,
   CATEGORIES,
   getState,
   getCategory,
-  buildSearchQuery
+  buildSearchQuery,
+  saveCategories,
+  saveStates
 };

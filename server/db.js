@@ -239,6 +239,27 @@ async function getActiveCampaigns() {
   return res.rows;
 }
 
+async function updateCampaign({ id, name, subject_template, body_template }) {
+  const res = await pool.query(
+    'UPDATE campaigns SET name = $1, subject_template = $2, body_template = $3 WHERE id = $4 RETURNING *;',
+    [name, subject_template, body_template, id]
+  );
+  return res.rows[0];
+}
+
+async function createCampaign({ name, subject_template, body_template }) {
+  const res = await pool.query(
+    'INSERT INTO campaigns (name, subject_template, body_template, created_at) VALUES ($1, $2, $3, NOW()) RETURNING *;',
+    [name, subject_template, body_template]
+  );
+  return res.rows[0];
+}
+
+async function deleteCampaign(id) {
+  await pool.query('DELETE FROM campaigns WHERE id = $1;', [id]);
+  return { success: true };
+}
+
 module.exports = {
   pool,
   query,
@@ -249,5 +270,8 @@ module.exports = {
   insertCreator,
   saveSerperLog,
   getSerperLogs,
-  getActiveCampaigns
+  getActiveCampaigns,
+  updateCampaign,
+  createCampaign,
+  deleteCampaign
 };

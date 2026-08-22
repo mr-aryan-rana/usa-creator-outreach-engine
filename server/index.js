@@ -5,8 +5,8 @@ const dotenv = require('dotenv');
 
 dotenv.config({ path: path.join(__dirname, '..', '.env') });
 
-const { getStats, getCreators, getSerperLogs, pool, getActiveCampaigns } = require('./db');
-const { STATES, CATEGORIES, buildSearchQuery } = require('./us_states_and_tags');
+const { getStats, getCreators, getSerperLogs, pool, getActiveCampaigns, updateCampaign, createCampaign, deleteCampaign } = require('./db');
+const { STATES, CATEGORIES, buildSearchQuery, saveCategories, saveStates } = require('./us_states_and_tags');
 const engine = require('./engine');
 
 const app = express();
@@ -114,6 +114,122 @@ app.get('/api/campaigns', async (req, res) => {
   try {
     const campaigns = await getActiveCampaigns();
     res.json({ campaigns });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+app.post('/api/campaigns', async (req, res) => {
+  try {
+    const { name, subject_template, body_template } = req.body || {};
+    if (!name || !subject_template || !body_template) {
+      return res.status(400).json({ error: 'Name, Subject, and Body are required.' });
+    }
+    const created = await createCampaign({ name, subject_template, body_template });
+    res.json({ success: true, campaign: created });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+app.put('/api/campaigns/:id', async (req, res) => {
+  try {
+    const id = parseInt(req.params.id);
+    const { name, subject_template, body_template } = req.body || {};
+    if (!name || !subject_template || !body_template) {
+      return res.status(400).json({ error: 'Name, Subject, and Body are required.' });
+    }
+    const updated = await updateCampaign({ id, name, subject_template, body_template });
+    res.json({ success: true, campaign: updated });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+app.delete('/api/campaigns/:id', async (req, res) => {
+  try {
+    const id = parseInt(req.params.id);
+    await deleteCampaign(id);
+    res.json({ success: true });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+// Category Management API
+app.post('/api/categories', (req, res) => {
+  try {
+    const { category, primary_tag, related_hashtags } = req.body || {};
+    if (!category || !primary_tag) {
+      return res.status(400).json({ error: 'Category Name and Primary Tag are required.' });
+    }
+    const slug = category.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
+    const tags = Array.isArray(related_hashtags) ? related_hashtags : (related_hashtags || '').split(',').map(t => t.trim().replace(/^#+/, '')).filter(Boolean);
+    
+    const idx = CATEGORIES.findIndex(c => c.slug === slug || c.primary_tag.toLowerCase() === primary_tag.toLowerCase());
+    const item = { category, primary_tag: primary_tag.toLowerCase(), related_hashtags: tags, slug };
+    
+    if (idx >= 0) {
+      CATEGORIES[idx] = item;
+    } else {
+      CATEGORIES.push(item);
+    }
+    saveCategories(CATEGORIES);
+    res.json({ success: true, category: item, categories: CATEGORIES });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+app.put('/api/categories/:slug', (req, res) => {
+  try {
+    const targetSlug = req.params.slug;
+    const { category, primary_tag, related_hashtags } = req.body || {};
+    const idx = CATEGORIES.findIndex(c => c.slug === targetSlug);
+    if (idx < 0) {
+      return res.status(404).json({ error: 'Category not found.' });
+    }
+    const tags = Array.isArray(related_hashtags) ? related_hashtags : (related_hashtags || '').split(',').map(t => t.trim().replace(/^#+/, '')).filter(Boolean);
+    CATEGORIES[idx] = {
+      category: category || CATEGORIES[idx].category,
+      primary_tag: (primary_tag || CATEGORIES[idx].primary_tag).toLowerCase(),
+      related_hashtags: tags,
+      slug: CATEGORIES[idx].slug
+    };
+    saveCategories(CATEGORIES);
+    res.json({ success: true, category: CATEGORIES[idx], categories: CATEGORIES });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+app.delete('/api/categories/:slug', (req, res) => {
+  try {
+    const targetSlug = req.params.slug;
+    const idx = CATEGORIES.findIndex(c => c.slug === targetSlug);
+    if (idx >= 0) {
+      CATEGORIES.splice(idx, 1);
+      saveCategories(CATEGORIES);
+    }
+    res.json({ success: true, categories: CATEGORIES });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+// State Management API
+app.put('/api/states/:code', (req, res) => {
+  try {
+    const code = req.params.code.toUpperCase();
+    const { active, priority } = req.body || {};
+    const idx = STATES.findIndex(s => s.code.toUpperCase() === code);
+    if (idx < 0) {
+      return res.status(404).json({ error: 'State not found.' });
+    }
+    if (typeof active === 'boolean') STATES[idx].active = active;
+    if (typeof priority === 'number') STATES[idx].priority = priority;
+    saveStates(STATES);
+    res.json({ success: true, state: STATES[idx], states: STATES });
   } catch (err) {
     res.status(500).json({ error: err.message });
   }

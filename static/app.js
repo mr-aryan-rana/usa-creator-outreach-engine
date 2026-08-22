@@ -263,30 +263,150 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
-  // Load Campaigns & Templates
+  // Modal & Edit Elements
+  const modalCampaign = document.getElementById("modal-campaign");
+  const modalCampaignTitle = document.getElementById("modal-campaign-title");
+  const formCampaign = document.getElementById("form-campaign");
+  const campaignIdInput = document.getElementById("campaign-id");
+  const campaignNameInput = document.getElementById("campaign-name");
+  const campaignSubjectInput = document.getElementById("campaign-subject");
+  const campaignBodyInput = document.getElementById("campaign-body");
+  const btnAddCampaign = document.getElementById("btn-add-campaign");
+  const modalCampaignClose = document.getElementById("modal-campaign-close");
+  const btnCampaignCancel = document.getElementById("btn-campaign-cancel");
+
+  const modalCategory = document.getElementById("modal-category");
+  const modalCategoryTitle = document.getElementById("modal-category-title");
+  const formCategory = document.getElementById("form-category");
+  const categorySlugInput = document.getElementById("category-slug");
+  const categoryNameInput = document.getElementById("category-name");
+  const categoryTagInput = document.getElementById("category-tag");
+  const categorySubtagsInput = document.getElementById("category-subtags");
+  const btnAddCategory = document.getElementById("btn-add-category");
+  const modalCategoryClose = document.getElementById("modal-category-close");
+  const btnCategoryCancel = document.getElementById("btn-category-cancel");
+  const categoriesGrid = document.getElementById("categories-grid");
+
+  let allCampaigns = [];
+  let allCategories = [];
+  let allStates = [];
+
+  // Load Campaigns
   async function loadCampaigns() {
     try {
       const res = await fetch("/api/campaigns");
       const data = await res.json();
-      renderCampaigns(data.campaigns || []);
+      allCampaigns = data.campaigns || [];
+      renderCampaigns(allCampaigns);
     } catch (err) {
       console.error("Error loading campaigns:", err);
     }
   }
 
   function renderCampaigns(campaigns) {
+    if (!campaignsList) return;
     campaignsList.innerHTML = "";
     campaigns.forEach(c => {
       const card = document.createElement("div");
       card.className = "campaign-card";
       card.innerHTML = `
-        <h4>Campaign #${c.id}: ${escapeHtml(c.name)}</h4>
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem;">
+          <h4 style="margin:0;">Template #${c.id}: ${escapeHtml(c.name)}</h4>
+          <div class="card-actions">
+            <button class="btn btn-sm btn-outline btn-edit-campaign" data-id="${c.id}">
+              <i class="fa-solid fa-pen-to-square"></i> Edit
+            </button>
+            <button class="btn btn-sm btn-outline btn-delete-campaign" data-id="${c.id}" style="border-color: rgba(255,75,75,0.4); color:#ff7575;">
+              <i class="fa-solid fa-trash"></i>
+            </button>
+          </div>
+        </div>
         <label style="font-size:0.75rem; color: var(--text-muted); font-weight:700;">SUBJECT LINE SPINTAX:</label>
         <code>${escapeHtml(c.subject_template || '')}</code>
-        <label style="font-size:0.75rem; color: var(--text-muted); font-weight:700;">BODY TEXT SPINTAX:</label>
+        <label style="font-size:0.75rem; color: var(--text-muted); font-weight:700; margin-top:0.5rem; display:block;">BODY TEXT SPINTAX:</label>
         <pre>${escapeHtml(c.body_template || '')}</pre>
       `;
       campaignsList.appendChild(card);
+    });
+
+    // Attach Action Handlers
+    document.querySelectorAll(".btn-edit-campaign").forEach(btn => {
+      btn.addEventListener("click", () => {
+        const id = parseInt(btn.getAttribute("data-id"));
+        const item = allCampaigns.find(x => x.id === id);
+        if (item) openCampaignModal(item);
+      });
+    });
+
+    document.querySelectorAll(".btn-delete-campaign").forEach(btn => {
+      btn.addEventListener("click", async () => {
+        const id = parseInt(btn.getAttribute("data-id"));
+        if (confirm("Are you sure you want to delete this outreach email template?")) {
+          await fetch(`/api/campaigns/${id}`, { method: 'DELETE' });
+          loadCampaigns();
+        }
+      });
+    });
+  }
+
+  // Load Categories
+  async function loadCategoriesGrid() {
+    try {
+      const res = await fetch("/api/categories");
+      const data = await res.json();
+      allCategories = data.categories || [];
+      renderCategories(allCategories);
+    } catch (err) {
+      console.error("Error loading categories:", err);
+    }
+  }
+
+  function renderCategories(categories) {
+    if (!categoriesGrid) return;
+    categoriesGrid.innerHTML = "";
+    categories.forEach(cat => {
+      const card = document.createElement("div");
+      card.className = "category-card";
+      const tagsHtml = (cat.related_hashtags || []).map(t => `<span class="tag-chip">#${escapeHtml(t)}</span>`).join("");
+      card.innerHTML = `
+        <div class="category-header">
+          <div>
+            <div class="category-title">${escapeHtml(cat.category)}</div>
+            <span class="category-primary-tag"><i class="fa-solid fa-tag"></i> "${escapeHtml(cat.primary_tag)}"</span>
+          </div>
+          <div class="card-actions">
+            <button class="btn btn-sm btn-outline btn-edit-category" data-slug="${cat.slug}">
+              <i class="fa-solid fa-pen"></i> Edit
+            </button>
+            <button class="btn btn-sm btn-outline btn-delete-category" data-slug="${cat.slug}" style="border-color: rgba(255,75,75,0.4); color:#ff7575;">
+              <i class="fa-solid fa-trash"></i>
+            </button>
+          </div>
+        </div>
+        <div class="category-hashtags">
+          ${tagsHtml}
+        </div>
+      `;
+      categoriesGrid.appendChild(card);
+    });
+
+    // Attach Category Action Handlers
+    document.querySelectorAll(".btn-edit-category").forEach(btn => {
+      btn.addEventListener("click", () => {
+        const slug = btn.getAttribute("data-slug");
+        const item = allCategories.find(x => x.slug === slug);
+        if (item) openCategoryModal(item);
+      });
+    });
+
+    document.querySelectorAll(".btn-delete-category").forEach(btn => {
+      btn.addEventListener("click", async () => {
+        const slug = btn.getAttribute("data-slug");
+        if (confirm("Are you sure you want to delete this niche category tag?")) {
+          await fetch(`/api/categories/${slug}`, { method: 'DELETE' });
+          loadCategoriesGrid();
+        }
+      });
     });
   }
 
@@ -295,59 +415,160 @@ document.addEventListener("DOMContentLoaded", () => {
     try {
       const res = await fetch("/api/states");
       const data = await res.json();
-      const states = data.states || [];
+      allStates = data.states || [];
       const grid = document.getElementById("states-grid");
       const dbSelect = document.getElementById("db-state-filter");
 
-      grid.innerHTML = "";
-      dbSelect.innerHTML = `<option value="all">All States</option>`;
+      if (grid) grid.innerHTML = "";
+      if (dbSelect) dbSelect.innerHTML = `<option value="">All States</option>`;
 
-      states.forEach(s => {
-        const card = document.createElement("div");
-        card.className = "state-card";
-        card.innerHTML = `
-          <span class="state-code">${s.code}</span>
-          <span class="state-name">${escapeHtml(s.name)}</span>
-          <span class="state-capital">Capital: ${escapeHtml(s.capital)}</span>
-        `;
-        grid.appendChild(card);
+      allStates.forEach(s => {
+        if (grid) {
+          const card = document.createElement("div");
+          card.className = `state-card ${s.active === false ? 'inactive' : ''}`;
+          card.innerHTML = `
+            <div style="display:flex; justify-content:space-between; align-items:center;">
+              <span class="state-code">${s.code}</span>
+              <button class="btn btn-sm btn-outline btn-toggle-state" data-code="${s.code}" style="padding:0.2rem 0.5rem; font-size:0.72rem;">
+                <i class="fa-solid ${s.active === false ? 'fa-toggle-off' : 'fa-toggle-on'}" style="color:${s.active === false ? '#888' : '#00f2fe'};"></i> ${s.active === false ? 'Disabled' : 'Active'}
+              </button>
+            </div>
+            <span class="state-name">${escapeHtml(s.name)}</span>
+            <span class="state-capital">Capital: ${escapeHtml(s.capital)}</span>
+          `;
+          grid.appendChild(card);
+        }
 
-        const opt = document.createElement("option");
-        opt.value = s.name;
-        opt.textContent = s.name;
-        dbSelect.appendChild(opt);
+        if (dbSelect) {
+          const opt = document.createElement("option");
+          opt.value = s.name;
+          opt.textContent = s.name;
+          dbSelect.appendChild(opt);
+        }
+      });
+
+      // Attach State Toggle Handlers
+      document.querySelectorAll(".btn-toggle-state").forEach(btn => {
+        btn.addEventListener("click", async () => {
+          const code = btn.getAttribute("data-code");
+          const currentState = allStates.find(x => x.code === code);
+          const newActive = currentState ? !currentState.active : false;
+          await fetch(`/api/states/${code}`, {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ active: newActive })
+          });
+          loadStatesGrid();
+        });
       });
     } catch (err) {
       console.error("Error loading states:", err);
     }
   }
 
+  // Modal Functions: Campaign
+  function openCampaignModal(c = null) {
+    if (c) {
+      modalCampaignTitle.textContent = "Edit Email Template";
+      campaignIdInput.value = c.id;
+      campaignNameInput.value = c.name;
+      campaignSubjectInput.value = c.subject_template || "";
+      campaignBodyInput.value = c.body_template || "";
+    } else {
+      modalCampaignTitle.textContent = "Create New Email Template";
+      campaignIdInput.value = "";
+      campaignNameInput.value = "";
+      campaignSubjectInput.value = "";
+      campaignBodyInput.value = "";
+    }
+    modalCampaign.classList.add("active");
+  }
+
+  function closeCampaignModal() {
+    modalCampaign.classList.remove("active");
+  }
+
+  if (btnAddCampaign) btnAddCampaign.addEventListener("click", () => openCampaignModal());
+  if (modalCampaignClose) modalCampaignClose.addEventListener("click", closeCampaignModal);
+  if (btnCampaignCancel) btnCampaignCancel.addEventListener("click", closeCampaignModal);
+
+  if (formCampaign) {
+    formCampaign.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const id = campaignIdInput.value;
+      const payload = {
+        name: campaignNameInput.value,
+        subject_template: campaignSubjectInput.value,
+        body_template: campaignBodyInput.value
+      };
+
+      const method = id ? 'PUT' : 'POST';
+      const url = id ? `/api/campaigns/${id}` : '/api/campaigns';
+
+      await fetch(url, {
+        method,
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
+      });
+
+      closeCampaignModal();
+      loadCampaigns();
+    });
+  }
+
+  // Modal Functions: Category
+  function openCategoryModal(cat = null) {
+    if (cat) {
+      modalCategoryTitle.textContent = "Edit Niche Category Tag";
+      categorySlugInput.value = cat.slug;
+      categoryNameInput.value = cat.category;
+      categoryTagInput.value = cat.primary_tag;
+      categorySubtagsInput.value = (cat.related_hashtags || []).join(", ");
+    } else {
+      modalCategoryTitle.textContent = "Add New Niche Category Tag";
+      categorySlugInput.value = "";
+      categoryNameInput.value = "";
+      categoryTagInput.value = "";
+      categorySubtagsInput.value = "";
+    }
+    modalCategory.classList.add("active");
+  }
+
+  function closeCategoryModal() {
+    modalCategory.classList.remove("active");
+  }
+
+  if (btnAddCategory) btnAddCategory.addEventListener("click", () => openCategoryModal());
+  if (modalCategoryClose) modalCategoryClose.addEventListener("click", closeCategoryModal);
+  if (btnCategoryCancel) btnCategoryCancel.addEventListener("click", closeCategoryModal);
+
+  if (formCategory) {
+    formCategory.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const slug = categorySlugInput.value;
+      const payload = {
+        category: categoryNameInput.value,
+        primary_tag: categoryTagInput.value,
+        related_hashtags: categorySubtagsInput.value.split(",").map(x => x.trim()).filter(Boolean)
+      };
+
+      const method = slug ? 'PUT' : 'POST';
+      const url = slug ? `/api/categories/${slug}` : '/api/categories';
+
+      await fetch(url, {
+        method,
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
+      });
+
+      closeCategoryModal();
+      loadCategoriesGrid();
+    });
+  }
+
   // Event Listeners
-  dbSearchInput.addEventListener("input", debounce(() => loadCreatorsDB(1), 300));
+  if (dbSearchInput) dbSearchInput.addEventListener("input", debounce(() => loadCreatorsDB(1), 300));
   if (dbContactFilter) dbContactFilter.addEventListener("change", () => loadCreatorsDB(1));
-  dbPlatformFilter.addEventListener("change", () => loadCreatorsDB(1));
-  dbStateFilter.addEventListener("change", () => loadCreatorsDB(1));
-
-  btnPrevPage.addEventListener("click", () => {
-    if (currentPage > 1) loadCreatorsDB(currentPage - 1);
-  });
-
-  btnNextPage.addEventListener("click", () => {
-    loadCreatorsDB(currentPage + 1);
-  });
-
-  btnRefreshData.addEventListener("click", () => {
-    loadStats();
-    loadCreatorsDB(currentPage);
-  });
-
-  btnExportCsv.addEventListener("click", () => {
-    const search = dbSearchInput.value;
-    const contactType = dbContactFilter ? dbContactFilter.value : "all";
-    const platform = dbPlatformFilter.value;
-    const location = dbStateFilter.value;
-    window.location.href = `/api/export/csv?search=${encodeURIComponent(search)}&contact_type=${encodeURIComponent(contactType)}&platform=${encodeURIComponent(platform)}&location=${encodeURIComponent(location)}`;
-  });
 
   function escapeHtml(str) {
     if (!str) return "";

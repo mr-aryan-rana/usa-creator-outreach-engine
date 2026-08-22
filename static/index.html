@@ -36,7 +36,11 @@
         </button>
         <button class="nav-item" data-tab="campaigns-tab">
           <i class="fa-solid fa-envelope-open-text"></i>
-          <span>Email Templates (7)</span>
+          <span>Email Templates</span>
+        </button>
+        <button class="nav-item" data-tab="categories-tab">
+          <i class="fa-solid fa-tags"></i>
+          <span>Niche Categories</span>
         </button>
         <button class="nav-item" data-tab="states-tab">
           <i class="fa-solid fa-flag-usa"></i>
@@ -78,7 +82,7 @@
             <i class="fa-solid fa-rotate"></i> Refresh
           </button>
           <button class="btn btn-primary" id="btn-export-csv">
-            <i class="fa-solid fa-file-csv"></i> Export CSV
+            <i class="fa-solid fa-download"></i> Export CSV
           </button>
           <a href="/api/logout" class="btn btn-outline" id="btn-logout" style="border-color: rgba(255, 75, 75, 0.4); color: #ff7575; text-decoration: none;">
             <i class="fa-solid fa-right-from-bracket"></i> Logout
@@ -86,94 +90,90 @@
         </div>
       </header>
 
-      <!-- Quota Metrics Grid -->
-      <div class="metrics-grid">
-        <div class="metric-card glow-purple">
-          <div class="metric-icon"><i class="fa-solid fa-magnifying-glass-chart"></i></div>
-          <div class="metric-body">
-            <span class="metric-label">Serper Daily Credits</span>
-            <div class="metric-progress-wrapper">
-              <span class="metric-value" id="stat-serper-credits">0 / 150</span>
-              <div class="progress-bar"><div class="progress-fill" id="fill-serper" style="width: 0%;"></div></div>
+      <!-- Tab Content 1: Live Engine Real-Time Stream & Terminal -->
+      <section id="engine-tab" class="tab-pane active">
+        <!-- Stats Row Cards -->
+        <div class="stats-grid">
+          <div class="stat-card">
+            <div class="stat-icon cyan"><i class="fa-solid fa-database"></i></div>
+            <div class="stat-details">
+              <span class="stat-value" id="stat-total-creators">0</span>
+              <span class="stat-label">Total Creators in DB</span>
+            </div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon purple"><i class="fa-solid fa-magnifying-glass"></i></div>
+            <div class="stat-details">
+              <span class="stat-value" id="stat-serper-credits">0 / 150</span>
+              <span class="stat-label">Serper Credits Used Today</span>
+            </div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon blue"><i class="fa-solid fa-paper-plane"></i></div>
+            <div class="stat-details">
+              <span class="stat-value" id="stat-emails-sent">0 / 200</span>
+              <span class="stat-label">Emails Sent Today</span>
+            </div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon green"><i class="fa-solid fa-layer-group"></i></div>
+            <div class="stat-details">
+              <span class="stat-value" id="stat-batch-progress">0 / 30</span>
+              <span class="stat-label">Current Batch Progress</span>
             </div>
           </div>
         </div>
 
-        <div class="metric-card glow-emerald">
-          <div class="metric-icon"><i class="fa-solid fa-paper-plane"></i></div>
-          <div class="metric-body">
-            <span class="metric-label">Emails Sent Today</span>
-            <div class="metric-progress-wrapper">
-              <span class="metric-value" id="stat-emails-sent">0 / 200</span>
-              <div class="progress-bar"><div class="progress-fill bg-emerald" id="fill-emails" style="width: 0%;"></div></div>
-            </div>
-          </div>
-        </div>
-
-        <div class="metric-card glow-cyan">
-          <div class="metric-icon"><i class="fa-solid fa-hourglass-half"></i></div>
-          <div class="metric-body">
-            <span class="metric-label">Current Batch Progress</span>
-            <div class="metric-progress-wrapper">
-              <span class="metric-value" id="stat-batch-count">0 / 30</span>
-              <span class="metric-sub" id="stat-rest-timer">Next Rest: 30 remaining</span>
-            </div>
-          </div>
-        </div>
-
-        <div class="metric-card glow-amber">
-          <div class="metric-icon"><i class="fa-solid fa-database"></i></div>
-          <div class="metric-body">
-            <span class="metric-label">Total Creators in DB</span>
-            <span class="metric-value" id="stat-total-creators">2,647</span>
-          </div>
-        </div>
-      </div>
-
-      <!-- Tab Content 1: Live Engine & Activity Log Terminal -->
-      <section id="dashboard-tab" class="tab-pane active">
-        <!-- Live Terminal Card -->
-        <div class="panel terminal-panel">
+        <!-- Terminal Output Viewport -->
+        <div class="panel">
           <div class="panel-header">
-            <h3><i class="fa-solid fa-terminal"></i> Live Engine Real-Time Terminal Log</h3>
-            <div class="terminal-actions">
-              <span class="badge badge-pulse" id="live-stream-badge">LIVE STREAM</span>
-              <button class="btn btn-sm btn-outline" id="btn-clear-terminal"><i class="fa-solid fa-trash-can"></i> Clear Log</button>
+            <div class="panel-title-group">
+              <h3><i class="fa-solid fa-terminal"></i> Live Engine Real-Time Terminal Log</h3>
+              <span class="pulse-tag" id="live-stream-badge">LIVE STREAM</span>
             </div>
+            <button class="btn btn-sm btn-outline" id="btn-clear-terminal">Clear Log</button>
           </div>
-          <div class="panel-body terminal-body" id="terminal-feed">
-            <div class="terminal-line system">[SYSTEM] Engine initialization complete. Click 'START SERVICE' to begin continuous loop.</div>
+          <div class="panel-body">
+            <div class="terminal-feed" id="terminal-feed">
+              <div class="terminal-line system">[SYSTEM] Engine initialization complete. Click 'START SERVICE' to begin continuous loop.</div>
+            </div>
           </div>
         </div>
       </section>
 
-      <!-- Tab Content 2: Creator Database Browser (Sorted Newest First) -->
+      <!-- Tab Content 2: PostgreSQL Creator Database Browser -->
       <section id="creators-tab" class="tab-pane">
         <div class="panel">
-          <div class="panel-header">
-            <h3><i class="fa-solid fa-database"></i> PostgreSQL Creator Database Browser (Newest First)</h3>
-            <div class="filter-controls">
-              <input type="text" id="db-search-input" class="form-control form-control-sm" placeholder="Search by name, email, location...">
-              <select id="db-contact-filter" class="form-control form-control-sm">
+          <div class="panel-header search-bar-container">
+            <div class="search-box">
+              <i class="fa-solid fa-magnifying-glass"></i>
+              <input type="text" id="db-search-input" placeholder="Search by name, profile URL, email, or state...">
+            </div>
+            
+            <div class="filter-group">
+              <select id="db-contact-filter" class="filter-select">
                 <option value="all">All Contacts</option>
                 <option value="email">Has Email</option>
                 <option value="phone">Has Mobile Phone</option>
-                <option value="both">Has Both (Email & Phone)</option>
+                <option value="both">Has Both</option>
               </select>
-              <select id="db-platform-filter" class="form-control form-control-sm">
-                <option value="all">All Platforms</option>
+
+              <select id="db-platform-filter" class="filter-select">
+                <option value="">All Platforms</option>
                 <option value="instagram">Instagram</option>
                 <option value="tiktok">TikTok</option>
                 <option value="facebook">Facebook</option>
                 <option value="youtube">YouTube</option>
               </select>
-              <select id="db-state-filter" class="form-control form-control-sm">
-                <option value="all">All States</option>
+
+              <select id="db-state-filter" class="filter-select">
+                <option value="">All States</option>
+                <!-- Populated via JS -->
               </select>
             </div>
           </div>
 
-          <div class="panel-body">
+          <div class="panel-body no-padding">
             <div class="table-responsive">
               <table class="data-table">
                 <thead>
@@ -208,12 +208,17 @@
         </div>
       </section>
 
-      <!-- Tab Content 3: Email Campaigns & Templates (7 Templates) -->
+      <!-- Tab Content 3: Email Campaigns & Templates -->
       <section id="campaigns-tab" class="tab-pane">
         <div class="panel">
-          <div class="panel-header">
-            <h3><i class="fa-solid fa-envelope-open-text"></i> Outreach Email Templates (7 Campaigns in DB)</h3>
-            <p>Auto-rotating templates with dynamic spintax and personalization</p>
+          <div class="panel-header" style="display: flex; justify-content: space-between; align-items: center;">
+            <div>
+              <h3><i class="fa-solid fa-envelope-open-text"></i> Outreach Email Templates</h3>
+              <p>Auto-rotating templates with dynamic spintax and personalization</p>
+            </div>
+            <button class="btn btn-primary" id="btn-add-campaign">
+              <i class="fa-solid fa-plus"></i> Create Email Template
+            </button>
           </div>
           <div class="panel-body">
             <div class="campaigns-list" id="campaigns-list">
@@ -223,7 +228,27 @@
         </div>
       </section>
 
-      <!-- Tab Content 4: 50 US States Registry -->
+      <!-- Tab Content 4: Creator Niche Category Tags -->
+      <section id="categories-tab" class="tab-pane">
+        <div class="panel">
+          <div class="panel-header" style="display: flex; justify-content: space-between; align-items: center;">
+            <div>
+              <h3><i class="fa-solid fa-tags"></i> Niche Category Search Tags</h3>
+              <p>Manage creator niches, primary search tags, and related hashtags</p>
+            </div>
+            <button class="btn btn-primary" id="btn-add-category">
+              <i class="fa-solid fa-plus"></i> Add Niche Category Tag
+            </button>
+          </div>
+          <div class="panel-body">
+            <div class="categories-grid" id="categories-grid">
+              <!-- Niche Categories rendered dynamically -->
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Tab Content 5: 50 US States Registry -->
       <section id="states-tab" class="tab-pane">
         <div class="panel">
           <div class="panel-header">
@@ -237,6 +262,64 @@
         </div>
       </section>
     </main>
+  </div>
+
+  <!-- Modal: Edit / Create Email Template -->
+  <div class="modal-overlay" id="modal-campaign">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h3 id="modal-campaign-title">Edit Email Template</h3>
+        <button class="modal-close" id="modal-campaign-close">&times;</button>
+      </div>
+      <form id="form-campaign">
+        <input type="hidden" id="campaign-id">
+        <div class="form-group">
+          <label class="form-label">Template Name / Internal Campaign Title</label>
+          <input type="text" id="campaign-name" class="input-field" placeholder="e.g. MakeAble Affiliate Invite" required>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Subject Template (Supports Spintax {Option A|Option B} & {{First Name}})</label>
+          <input type="text" id="campaign-subject" class="input-field" placeholder="{Hi|Hello} {{First Name}}, Quick collab inquiry" required>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Body Template (Supports Spintax & {{First Name}} / {{Creator Name}})</label>
+          <textarea id="campaign-body" class="input-field" rows="10" placeholder="Hi {{First Name}}, {We love your content!|Your page is amazing!}" required></textarea>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-outline" id="btn-campaign-cancel">Cancel</button>
+          <button type="submit" class="btn btn-primary" id="btn-campaign-save">Save Template</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Modal: Edit / Create Niche Category Tag -->
+  <div class="modal-overlay" id="modal-category">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h3 id="modal-category-title">Edit Niche Category Tag</h3>
+        <button class="modal-close" id="modal-category-close">&times;</button>
+      </div>
+      <form id="form-category">
+        <input type="hidden" id="category-slug">
+        <div class="form-group">
+          <label class="form-label">Category Name</label>
+          <input type="text" id="category-name" class="input-field" placeholder="e.g. Beauty & Cosmetics" required>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Primary Search Tag</label>
+          <input type="text" id="category-tag" class="input-field" placeholder="e.g. beauty" required>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Related Hashtags / Sub-Tags (Comma Separated)</label>
+          <input type="text" id="category-subtags" class="input-field" placeholder="e.g. makeup, skincare, cosmetics, glam">
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-outline" id="btn-category-cancel">Cancel</button>
+          <button type="submit" class="btn btn-primary" id="btn-category-save">Save Category Tag</button>
+        </div>
+      </form>
+    </div>
   </div>
 
   <script src="/app.js"></script>

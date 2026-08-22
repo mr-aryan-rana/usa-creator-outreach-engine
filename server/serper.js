@@ -43,15 +43,28 @@ async function executeSerperSearch(queryText, numResults = 10) {
 
   let data = await response.json();
 
-  // If query pattern error 400, try clean fallback query retaining the platform domain (e.g. facebook.com "tag" "@gmail.com" "State")
+  // Level 1 Fallback: Strip site: prefix and quotes (e.g. tiktok.com travel @gmail.com Texas)
   if (response.status === 400 && data.message && data.message.includes('Query pattern')) {
-    const fallbackQuery = queryText.replace(/^site:/i, '');
-    console.log(`[SERPER FALLBACK] Trying clean platform fallback query: ${fallbackQuery}`);
+    const fallbackQuery1 = queryText.replace(/^site:/i, '').replace(/"/g, '');
+    console.log(`[SERPER FALLBACK L1] Trying clean fallback query: ${fallbackQuery1}`);
     
     response = await fetch(url, {
       method: 'POST',
       headers: headers,
-      body: JSON.stringify({ q: fallbackQuery, num: numResults })
+      body: JSON.stringify({ q: fallbackQuery1, num: numResults })
+    });
+    data = await response.json();
+  }
+
+  // Level 2 Fallback: Strip @ symbol (e.g. tiktok.com travel gmail.com Texas)
+  if (response.status === 400) {
+    const fallbackQuery2 = queryText.replace(/^site:/i, '').replace(/"/g, '').replace(/@/g, '');
+    console.log(`[SERPER FALLBACK L2] Trying simplified fallback query: ${fallbackQuery2}`);
+    
+    response = await fetch(url, {
+      method: 'POST',
+      headers: headers,
+      body: JSON.stringify({ q: fallbackQuery2, num: numResults })
     });
     data = await response.json();
   }

@@ -18,30 +18,29 @@ async function extractCreatorsFromSearch({ organic, platform, targetState }) {
   }
 
   const prompt = `
-You are an expert AI data extraction assistant for content creators.
+You are an expert AI data extraction assistant for content creators, influencers, and brands.
 Analyze the following search engine results from ${platform.toUpperCase()} in the US state of ${targetState}.
 
 Search Results Snippets:
 ${JSON.stringify(organic, null, 2)}
 
-STRICT REQUIREMENTS:
-1. Extract content creator profiles from the search results.
-2. A single search snippet may contain MULTIPLE creators or handles. Extract EVERY individual creator found.
-3. For each creator, split the name into TWO SECTIONS ("first_name" and "last_name") as well as full "name":
-   - "first_name": First Name (e.g. "Sederia", "Karly", "Selena")
-   - "last_name": Last Name (e.g. "Steger"), or null if unavailable
-   - "name": Full Name or Channel Title (e.g. "Sederia Steger")
+STRICT extraction RULES:
+1. Extract content creators, influencers, brands, or page contacts found in the search results.
+2. IF ANY SNIPPET CONTAINS A VALID EMAIL ADDRESS (e.g. "tasteoftherunway@gmail.com"), YOU MUST EXTRACT THAT CREATOR/CONTACT RECORD.
+3. For each creator:
+   - "first_name": First Name or Organization Name
+   - "last_name": Last Name (or null if unavailable)
+   - "name": Full Name, Page Title, or Organization Name (e.g. "Fashion Project DC")
    - "platform": "${platform}"
-   - "profile_url": Clean profile URL (e.g. "https://www.instagram.com/username/")
-   - "email": Complete valid email address (MUST contain "@", e.g. "username@gmail.com")
-   - "phone": US Phone number if present (e.g. "+1 ..."), or null
-   - "location": US City/State confirmed from bio, hashtag, or area code (default to "${targetState}")
-   - "bio": Short bio snippet
+   - "profile_url": The exact link URL from the result snippet or handle profile URL
+   - "email": The complete valid email address (MUST contain "@", e.g. "tasteoftherunway@gmail.com")
+   - "phone": US Phone number if present in snippet, or null
+   - "location": US City/State confirmed from snippet (default to "${targetState}")
+   - "bio": Short snippet description
 
 CRITICAL MANDATORY FILTER RULE:
-- YOU MUST ONLY INCLUDE CREATORS THAT HAVE A COMPLETE VALID EMAIL ADDRESS (containing "@", e.g. "user@gmail.com").
-- DO NOT INCLUDE ANY CREATOR WITH email = null, email = "", OR INCOMPLETE DOMAINS LIKE "gmail.com".
-- REJECT AND DROP ALL PHONE-ONLY OR NO-EMAIL ENTRIES.
+- YOU MUST ONLY INCLUDE CREATORS THAT HAVE A COMPLETE VALID EMAIL ADDRESS (containing "@").
+- REJECT AND DROP ENTRIES THAT HAVE NO EMAIL ADDRESS.
 
 Return your response strictly as a JSON object with key "creators":
 {

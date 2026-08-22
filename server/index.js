@@ -5,7 +5,7 @@ const dotenv = require('dotenv');
 
 dotenv.config({ path: path.join(__dirname, '..', '.env') });
 
-const { getStats, getCreators, getSerperLogs, pool, getActiveCampaigns, updateCampaign, createCampaign, deleteCampaign } = require('./db');
+const { getStats, getCreators, insertCreator, deleteCreator, getSerperLogs, pool, getActiveCampaigns, updateCampaign, createCampaign, deleteCampaign } = require('./db');
 const { STATES, CATEGORIES, buildSearchQuery, saveCategories, saveStates } = require('./us_states_and_tags');
 const engine = require('./engine');
 
@@ -95,6 +95,16 @@ app.get('/api/creators', async (req, res) => {
 
     const data = await getCreators({ page, limit, search, platform, location, contact_type });
     res.json(data);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+app.delete('/api/creators/:id', async (req, res) => {
+  try {
+    const id = parseInt(req.params.id);
+    await deleteCreator(id);
+    res.json({ success: true });
   } catch (err) {
     res.status(500).json({ error: err.message });
   }

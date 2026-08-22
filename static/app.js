@@ -258,8 +258,24 @@ document.addEventListener("DOMContentLoaded", () => {
         <td><span class="${isValid ? 'badge-valid' : 'badge-pending'}">${isValid ? '✓ 250 OK (SMTP Handshake Passed)' : 'Pending SMTP Validation'}</span></td>
         <td>${escapeHtml(item.location || "USA")}</td>
         <td>${item.created_at ? new Date(item.created_at).toLocaleDateString() : 'N/A'}</td>
+        <td>
+          <button class="btn btn-sm btn-outline btn-delete-creator" data-id="${item.id}" style="border-color: rgba(255,75,75,0.4); color:#ff7575; padding:0.2rem 0.5rem; font-size:0.72rem;">
+            <i class="fa-solid fa-trash"></i> Delete
+          </button>
+        </td>
       `;
       dbTableBody.appendChild(tr);
+    });
+
+    document.querySelectorAll(".btn-delete-creator").forEach(btn => {
+      btn.addEventListener("click", async () => {
+        const id = parseInt(btn.getAttribute("data-id"));
+        if (confirm("Are you sure you want to delete this creator from the database?")) {
+          await fetch(`/api/creators/${id}`, { method: 'DELETE' });
+          loadCreatorsDB(currentPage);
+          updateStats();
+        }
+      });
     });
   }
 

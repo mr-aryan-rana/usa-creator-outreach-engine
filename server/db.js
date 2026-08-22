@@ -260,6 +260,13 @@ async function deleteCampaign(id) {
   return { success: true };
 }
 
+async function deleteCreator(id) {
+  await pool.query('DELETE FROM emails WHERE creator_id = $1;', [id]);
+  await pool.query('DELETE FROM phone_numbers WHERE creator_id = $1;', [id]);
+  await pool.query('DELETE FROM creators WHERE id = $1;', [id]);
+  return { success: true };
+}
+
 module.exports = {
   pool,
   query,
@@ -268,6 +275,7 @@ module.exports = {
   hasQueryBeenExecutedToday,
   getCreators,
   insertCreator,
+  deleteCreator,
   saveSerperLog,
   getSerperLogs,
   getActiveCampaigns,

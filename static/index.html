@@ -90,39 +90,52 @@
         </div>
       </header>
 
-      <!-- Tab Content 1: Live Engine Real-Time Stream & Terminal -->
-      <section id="engine-tab" class="tab-pane active">
-        <!-- Stats Row Cards -->
-        <div class="stats-grid">
-          <div class="stat-card">
-            <div class="stat-icon cyan"><i class="fa-solid fa-database"></i></div>
-            <div class="stat-details">
-              <span class="stat-value" id="stat-total-creators">0</span>
-              <span class="stat-label">Total Creators in DB</span>
-            </div>
+      <!-- Quota Metrics Grid -->
+      <div class="metrics-grid">
+        <div class="metric-card glow-amber">
+          <div class="metric-icon"><i class="fa-solid fa-database"></i></div>
+          <div class="metric-body">
+            <span class="metric-label">Total Creators in DB</span>
+            <span class="metric-value" id="stat-total-creators">0</span>
           </div>
-          <div class="stat-card">
-            <div class="stat-icon purple"><i class="fa-solid fa-magnifying-glass"></i></div>
-            <div class="stat-details">
-              <span class="stat-value" id="stat-serper-credits">0 / 150</span>
-              <span class="stat-label">Serper Credits Used Today</span>
-            </div>
-          </div>
-          <div class="stat-card">
-            <div class="stat-icon blue"><i class="fa-solid fa-paper-plane"></i></div>
-            <div class="stat-details">
-              <span class="stat-value" id="stat-emails-sent">0 / 200</span>
-              <span class="stat-label">Emails Sent Today</span>
-            </div>
-          </div>
-          <div class="stat-card">
-            <div class="stat-icon green"><i class="fa-solid fa-layer-group"></i></div>
-            <div class="stat-details">
-              <span class="stat-value" id="stat-batch-progress">0 / 30</span>
-              <span class="stat-label">Current Batch Progress</span>
+        </div>
+
+        <div class="metric-card glow-purple">
+          <div class="metric-icon"><i class="fa-solid fa-magnifying-glass-chart"></i></div>
+          <div class="metric-body">
+            <span class="metric-label">Serper Daily Credits</span>
+            <div class="metric-progress-wrapper">
+              <span class="metric-value" id="stat-serper-credits">0 / 150</span>
+              <div class="progress-bar"><div class="progress-fill" id="fill-serper" style="width: 0%;"></div></div>
             </div>
           </div>
         </div>
+
+        <div class="metric-card glow-emerald">
+          <div class="metric-icon"><i class="fa-solid fa-paper-plane"></i></div>
+          <div class="metric-body">
+            <span class="metric-label">Emails Sent Today</span>
+            <div class="metric-progress-wrapper">
+              <span class="metric-value" id="stat-emails-sent">0 / 200</span>
+              <div class="progress-bar"><div class="progress-fill bg-emerald" id="fill-emails" style="width: 0%;"></div></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="metric-card glow-cyan">
+          <div class="metric-icon"><i class="fa-solid fa-hourglass-half"></i></div>
+          <div class="metric-body">
+            <span class="metric-label">Current Batch Progress</span>
+            <div class="metric-progress-wrapper">
+              <span class="metric-value" id="stat-batch-count">0 / 30</span>
+              <span class="metric-sub" id="stat-rest-timer">Next Rest: 30 remaining</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Tab Content 1: Live Engine Real-Time Stream & Terminal -->
+      <section id="engine-tab" class="tab-pane active">
 
         <!-- Terminal Output Viewport -->
         <div class="panel">
@@ -187,6 +200,7 @@
                     <th>SMTP Validation</th>
                     <th>Location</th>
                     <th>Created At</th>
+                    <th>Action</th>
                   </tr>
                 </thead>
                 <tbody id="db-table-body">

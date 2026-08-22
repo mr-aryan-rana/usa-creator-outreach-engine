@@ -69,10 +69,46 @@ Return your response strictly as a JSON object with key "creators":
     });
 
     const parsed = JSON.parse(response.choices[0].message.content);
-    const creators = parsed.creators || [];
+    let creators = parsed.creators || [];
     
     // Strict post-extraction filter: ONLY return creators that have a complete email containing '@'
-    return creators.filter(c => c.email && typeof c.email === 'string' && c.email.includes('@') && c.email.trim().toLowerCase() !== 'gmail.com');
+    creators = creators.filter(c => c.email && typeof c.email === 'string' && c.email.includes('@') && c.email.trim().toLowerCase() !== 'gmail.com');
+
+    // DETERMINISTIC REGEX FALLBACK: Scan all organic search snippets to ensure 0% email loss
+    const emailRegex = /\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}\b/g;
+    const existingEmails = new Set(creators.map(c => c.email.toLowerCase()));
+
+    for (const item of (organic || [])) {
+      const text = `${item.title || ''} ${item.snippet || ''}`;
+      const matches = text.match(emailRegex) || [];
+      for (const rawEmail of matches) {
+        const cleanEmail = rawEmail.trim().toLowerCase();
+        if (cleanEmail === 'gmail.com' || cleanEmail.includes('example.com') || cleanEmail.endsWith('.png') || cleanEmail.endsWith('.jpg')) continue;
+
+        if (!existingEmails.has(cleanEmail)) {
+          existingEmails.add(cleanEmail);
+          
+          const rawTitle = (item.title || 'Content Creator').split('|')[0].split('-')[0].trim();
+          const cleanName = rawTitle.length > 2 ? rawTitle : 'Content Creator';
+          const nameParts = cleanName.split(' ');
+          const phoneMatch = text.match(/(\+?1[-.\s]?)?\(?\d{3}\)?[-.\s]?\d{3}[-.\s]?\d{4}/);
+
+          creators.push({
+            first_name: nameParts[0] || 'Dear',
+            last_name: nameParts.slice(1).join(' ') || null,
+            name: cleanName,
+            platform: platform,
+            profile_url: item.link || `https://www.${platform}.com`,
+            email: cleanEmail,
+            phone: phoneMatch ? phoneMatch[0] : null,
+            location: targetState,
+            bio: item.snippet || ''
+          });
+        }
+      }
+    }
+
+    return creators;
   } catch (err) {
     console.error("OpenAI Extraction Error:", err.message);
     return [];

@@ -12,9 +12,13 @@ const engine = require('./engine');
 const app = express();
 const PORT = process.env.PORT || 10000;
 
-const ADMIN_USER = (process.env.ADMIN_USERNAME || 'admin').trim();
-const ADMIN_PASS = (process.env.ADMIN_PASSWORD || 'admin123').trim();
-const SESSION_SECRET = (process.env.SECRET_KEY || process.env.SESSION_SECRET || 'makeable_admin_secret_token').trim();
+const ADMIN_USER = (process.env.ADMIN_USERNAME || '').trim();
+const ADMIN_PASS = (process.env.ADMIN_PASSWORD || '').trim();
+const SESSION_SECRET = (process.env.SECRET_KEY || process.env.SESSION_SECRET || 'makeable_secret_token').trim();
+
+if (!ADMIN_USER || !ADMIN_PASS) {
+  console.warn("SECURITY WARNING: ADMIN_USERNAME or ADMIN_PASSWORD is missing in .env file.");
+}
 
 app.use(cors());
 app.use(express.json());
@@ -35,6 +39,9 @@ function parseCookies(req) {
 // 0. Public Auth Endpoints
 app.post('/api/login', (req, res) => {
   const { username, password } = req.body || {};
+  if (!ADMIN_USER || !ADMIN_PASS) {
+    return res.status(500).json({ success: false, error: 'Admin credentials are not configured in .env file.' });
+  }
   if (username === ADMIN_USER && password === ADMIN_PASS) {
     res.setHeader('Set-Cookie', `admin_session=${SESSION_SECRET}; Path=/; HttpOnly; SameSite=Lax`);
     return res.json({ success: true, message: 'Logged in successfully' });

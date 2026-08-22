@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Login - MakeAble USA Creator Finder & Outreach Engine</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg-dark: #0a0d14;
+      --card-bg: rgba(18, 24, 38, 0.75);
+      --card-border: rgba(255, 255, 255, 0.08);
+      --primary-cyan: #00f2fe;
+      --primary-blue: #4facfe;
+      --accent-purple: #7000ff;
+      --text-main: #f0f4f8;
+      --text-muted: #8a99ad;
+      --danger-red: #ff4b4b;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Outfit', sans-serif;
+      background-color: var(--bg-dark);
+      color: var(--text-main);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      overflow: hidden;
+    }
+
+    /* Dynamic Glowing Gradient Orbs Background */
+    .bg-orb {
+      position: absolute;
+      border-radius: 50%;
+      filter: blur(120px);
+      opacity: 0.45;
+      pointer-events: none;
+      animation: floatOrb 12s infinite alternate ease-in-out;
+    }
+
+    .orb-1 {
+      width: 450px;
+      height: 450px;
+      background: radial-gradient(circle, var(--accent-purple), transparent);
+      top: -100px;
+      left: -100px;
+    }
+
+    .orb-2 {
+      width: 500px;
+      height: 500px;
+      background: radial-gradient(circle, var(--primary-cyan), transparent);
+      bottom: -150px;
+      right: -150px;
+      animation-delay: -6s;
+    }
+
+    @keyframes floatOrb {
+      0% { transform: translate(0, 0) scale(1); }
+      100% { transform: translate(60px, 40px) scale(1.1); }
+    }
+
+    /* Glassmorphism Card Container */
+    .login-card {
+      width: 100%;
+      max-width: 440px;
+      padding: 42px 36px;
+      background: var(--card-bg);
+      backdrop-filter: blur(24px);
+      -webkit-backdrop-filter: blur(24px);
+      border: 1px solid var(--card-border);
+      border-radius: 24px;
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.6), inset 0 1px 1px rgba(255, 255, 255, 0.1);
+      position: relative;
+      z-index: 10;
+      animation: fadeIn 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(20px) scale(0.96); }
+      to { opacity: 1; transform: translateY(0) scale(1); }
+    }
+
+    /* Brand Header */
+    .brand-header {
+      text-align: center;
+      margin-bottom: 32px;
+    }
+
+    .brand-badge {
+      display: inline-block;
+      padding: 6px 14px;
+      background: linear-gradient(135deg, rgba(0, 242, 254, 0.15), rgba(112, 0, 255, 0.15));
+      border: 1px solid rgba(0, 242, 254, 0.3);
+      border-radius: 30px;
+      font-size: 0.75rem;
+      font-weight: 700;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      color: var(--primary-cyan);
+      margin-bottom: 14px;
+    }
+
+    .brand-title {
+      font-size: 1.85rem;
+      font-weight: 800;
+      background: linear-gradient(135deg, #ffffff 30%, #a5c0ee 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      letter-spacing: -0.5px;
+      margin-bottom: 6px;
+    }
+
+    .brand-subtitle {
+      font-size: 0.88rem;
+      color: var(--text-muted);
+    }
+
+    /* Form Elements */
+    .form-group {
+      margin-bottom: 22px;
+    }
+
+    .form-label {
+      display: block;
+      font-size: 0.82rem;
+      font-weight: 600;
+      color: var(--text-muted);
+      margin-bottom: 8px;
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+    }
+
+    .input-wrapper {
+      position: relative;
+    }
+
+    .input-field {
+      width: 100%;
+      padding: 14px 18px;
+      font-size: 0.95rem;
+      font-family: inherit;
+      color: var(--text-main);
+      background: rgba(10, 15, 26, 0.6);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      border-radius: 12px;
+      outline: none;
+      transition: all 0.25s ease;
+    }
+
+    .input-field:focus {
+      border-color: var(--primary-cyan);
+      box-shadow: 0 0 16px rgba(0, 242, 254, 0.25);
+      background: rgba(10, 15, 26, 0.85);
+    }
+
+    /* Submit Button */
+    .btn-submit {
+      width: 100%;
+      padding: 15px;
+      font-size: 1rem;
+      font-weight: 700;
+      font-family: inherit;
+      color: #07090e;
+      background: linear-gradient(135deg, var(--primary-cyan), var(--primary-blue));
+      border: none;
+      border-radius: 12px;
+      cursor: pointer;
+      box-shadow: 0 8px 24px rgba(0, 242, 254, 0.35);
+      transition: all 0.25s ease;
+      margin-top: 10px;
+    }
+
+    .btn-submit:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 12px 32px rgba(0, 242, 254, 0.5);
+    }
+
+    .btn-submit:active {
+      transform: translateY(0);
+    }
+
+    /* Error Notification Alert */
+    .alert-danger {
+      background: rgba(255, 75, 75, 0.12);
+      border: 1px solid rgba(255, 75, 75, 0.35);
+      color: #ff7575;
+      padding: 12px 16px;
+      border-radius: 10px;
+      font-size: 0.85rem;
+      font-weight: 500;
+      margin-bottom: 20px;
+      display: none;
+      align-items: center;
+      gap: 10px;
+      animation: shake 0.4s ease-in-out;
+    }
+
+    @keyframes shake {
+      0%, 100% { transform: translateX(0); }
+      20%, 60% { transform: translateX(-6px); }
+      40%, 80% { transform: translateX(6px); }
+    }
+
+    .alert-danger.show {
+      display: flex;
+    }
+
+    .footer-note {
+      text-align: center;
+      font-size: 0.78rem;
+      color: rgba(255, 255, 255, 0.35);
+      margin-top: 28px;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Dynamic Glowing Mesh Background Orbs -->
+  <div class="bg-orb orb-1"></div>
+  <div class="bg-orb orb-2"></div>
+
+  <!-- Login Glass Card -->
+  <div class="login-card">
+    <div class="brand-header">
+      <span class="brand-badge">MakeAble AI</span>
+      <h1 class="brand-title">USA Creator Engine</h1>
+      <p class="brand-subtitle">Enter Admin Credentials to Access Platform</p>
+    </div>
+
+    <!-- Error Alert Box -->
+    <div id="error-alert" class="alert-danger">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg>
+      <span id="error-text">Invalid Admin ID or Password</span>
+    </div>
+
+    <form id="login-form">
+      <div class="form-group">
+        <label class="form-label" for="username">Admin ID / Username</label>
+        <div class="input-wrapper">
+          <input type="text" id="username" class="input-field" placeholder="Enter Admin ID" required autocomplete="username">
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label" for="password">Password</label>
+        <div class="input-wrapper">
+          <input type="password" id="password" class="input-field" placeholder="Enter Password" required autocomplete="current-password">
+        </div>
+      </div>
+
+      <button type="submit" id="btn-login" class="btn-submit">Sign In to Dashboard</button>
+    </form>
+
+    <div class="footer-note">
+      Protected System • MakeAble Creator Automation & Outreach Engine v2.0
+    </div>
+  </div>
+
+  <script>
+    const loginForm = document.getElementById('login-form');
+    const errorAlert = document.getElementById('error-alert');
+    const errorText = document.getElementById('error-text');
+    const btnLogin = document.getElementById('btn-login');
+
+    loginForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      errorAlert.classList.remove('show');
+      
+      const username = document.getElementById('username').value.trim();
+      const password = document.getElementById('password').value.trim();
+
+      btnLogin.disabled = true;
+      btnLogin.textContent = 'Authenticating...';
+
+      try {
+        const res = await fetch('/api/login', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ username, password })
+        });
+
+        const data = await res.json();
+
+        if (res.ok && data.success) {
+          btnLogin.textContent = 'Access Granted!';
+          window.location.href = '/';
+        } else {
+          errorText.textContent = data.error || 'Invalid Admin ID or Password';
+          errorAlert.classList.add('show');
+          btnLogin.disabled = false;
+          btnLogin.textContent = 'Sign In to Dashboard';
+        }
+      } catch (err) {
+        errorText.textContent = 'Network or server connection error.';
+        errorAlert.classList.add('show');
+        btnLogin.disabled = false;
+        btnLogin.textContent = 'Sign In to Dashboard';
+      }
+    });
+  </script>
+</body>
+</html>

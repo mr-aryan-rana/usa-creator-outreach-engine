@@ -1,0 +1,581 @@
+[
+  {
+    "code": "AL",
+    "name": "Alabama",
+    "capital": "Montgomery",
+    "major_cities": [
+      "Birmingham",
+      "Montgomery",
+      "Huntsville",
+      "Mobile"
+    ],
+    "slug": "alabama"
+  },
+  {
+    "code": "AK",
+    "name": "Alaska",
+    "capital": "Juneau",
+    "major_cities": [
+      "Anchorage",
+      "Fairbanks",
+      "Juneau"
+    ],
+    "slug": "alaska"
+  },
+  {
+    "code": "AZ",
+    "name": "Arizona",
+    "capital": "Phoenix",
+    "major_cities": [
+      "Phoenix",
+      "Tucson",
+      "Mesa",
+      "Scottsdale"
+    ],
+    "slug": "arizona"
+  },
+  {
+    "code": "AR",
+    "name": "Arkansas",
+    "capital": "Little Rock",
+    "major_cities": [
+      "Little Rock",
+      "Fort Smith",
+      "Fayetteville"
+    ],
+    "slug": "arkansas"
+  },
+  {
+    "code": "CA",
+    "name": "California",
+    "capital": "Sacramento",
+    "major_cities": [
+      "Los Angeles",
+      "San Francisco",
+      "San Diego",
+      "San Jose"
+    ],
+    "slug": "california"
+  },
+  {
+    "code": "CO",
+    "name": "Colorado",
+    "capital": "Denver",
+    "major_cities": [
+      "Denver",
+      "Colorado Springs",
+      "Aurora",
+      "Boulder"
+    ],
+    "slug": "colorado"
+  },
+  {
+    "code": "CT",
+    "name": "Connecticut",
+    "capital": "Hartford",
+    "major_cities": [
+      "Bridgeport",
+      "New Haven",
+      "Stamford",
+      "Hartford"
+    ],
+    "slug": "connecticut"
+  },
+  {
+    "code": "DE",
+    "name": "Delaware",
+    "capital": "Dover",
+    "major_cities": [
+      "Wilmington",
+      "Dover",
+      "Newark"
+    ],
+    "slug": "delaware"
+  },
+  {
+    "code": "FL",
+    "name": "Florida",
+    "capital": "Tallahassee",
+    "major_cities": [
+      "Miami",
+      "Orlando",
+      "Tampa",
+      "Jacksonville"
+    ],
+    "slug": "florida"
+  },
+  {
+    "code": "GA",
+    "name": "Georgia",
+    "capital": "Atlanta",
+    "major_cities": [
+      "Atlanta",
+      "Augusta",
+      "Columbus",
+      "Savannah"
+    ],
+    "slug": "georgia"
+  },
+  {
+    "code": "HI",
+    "name": "Hawaii",
+    "capital": "Honolulu",
+    "major_cities": [
+      "Honolulu",
+      "Hilo",
+      "Kailua"
+    ],
+    "slug": "hawaii"
+  },
+  {
+    "code": "ID",
+    "name": "Idaho",
+    "capital": "Boise",
+    "major_cities": [
+      "Boise",
+      "Meridian",
+      "Nampa"
+    ],
+    "slug": "idaho"
+  },
+  {
+    "code": "IL",
+    "name": "Illinois",
+    "capital": "Springfield",
+    "major_cities": [
+      "Chicago",
+      "Aurora",
+      "Naperville",
+      "Springfield"
+    ],
+    "slug": "illinois"
+  },
+  {
+    "code": "IN",
+    "name": "Indiana",
+    "capital": "Indianapolis",
+    "major_cities": [
+      "Indianapolis",
+      "Fort Wayne",
+      "Evansville"
+    ],
+    "slug": "indiana"
+  },
+  {
+    "code": "IA",
+    "name": "Iowa",
+    "capital": "Des Moines",
+    "major_cities": [
+      "Des Moines",
+      "Cedar Rapids",
+      "Davenport"
+    ],
+    "slug": "iowa"
+  },
+  {
+    "code": "KS",
+    "name": "Kansas",
+    "capital": "Topeka",
+    "major_cities": [
+      "Wichita",
+      "Overland Park",
+      "Kansas City",
+      "Topeka"
+    ],
+    "slug": "kansas"
+  },
+  {
+    "code": "KY",
+    "name": "Kentucky",
+    "capital": "Frankfort",
+    "major_cities": [
+      "Louisville",
+      "Lexington",
+      "Bowling Green"
+    ],
+    "slug": "kentucky"
+  },
+  {
+    "code": "LA",
+    "name": "Louisiana",
+    "capital": "Baton Rouge",
+    "major_cities": [
+      "New Orleans",
+      "Baton Rouge",
+      "Shreveport"
+    ],
+    "slug": "louisiana"
+  },
+  {
+    "code": "ME",
+    "name": "Maine",
+    "capital": "Augusta",
+    "major_cities": [
+      "Portland",
+      "Lewiston",
+      "Bangor"
+    ],
+    "slug": "maine"
+  },
+  {
+    "code": "MD",
+    "name": "Maryland",
+    "capital": "Annapolis",
+    "major_cities": [
+      "Baltimore",
+      "Frederick",
+      "Rockville"
+    ],
+    "slug": "maryland"
+  },
+  {
+    "code": "MA",
+    "name": "Massachusetts",
+    "capital": "Boston",
+    "major_cities": [
+      "Boston",
+      "Worcester",
+      "Springfield",
+      "Cambridge"
+    ],
+    "slug": "massachusetts"
+  },
+  {
+    "code": "MI",
+    "name": "Michigan",
+    "capital": "Lansing",
+    "major_cities": [
+      "Detroit",
+      "Grand Rapids",
+      "Warren",
+      "Ann Arbor"
+    ],
+    "slug": "michigan"
+  },
+  {
+    "code": "MN",
+    "name": "Minnesota",
+    "capital": "Saint Paul",
+    "major_cities": [
+      "Minneapolis",
+      "Saint Paul",
+      "Rochester"
+    ],
+    "slug": "minnesota"
+  },
+  {
+    "code": "MS",
+    "name": "Mississippi",
+    "capital": "Jackson",
+    "major_cities": [
+      "Jackson",
+      "Gulfport",
+      "Southaven"
+    ],
+    "slug": "mississippi"
+  },
+  {
+    "code": "MO",
+    "name": "Missouri",
+    "capital": "Jefferson City",
+    "major_cities": [
+      "Kansas City",
+      "St. Louis",
+      "Springfield"
+    ],
+    "slug": "missouri"
+  },
+  {
+    "code": "MT",
+    "name": "Montana",
+    "capital": "Helena",
+    "major_cities": [
+      "Billings",
+      "Missoula",
+      "Great Falls"
+    ],
+    "slug": "montana"
+  },
+  {
+    "code": "NE",
+    "name": "Nebraska",
+    "capital": "Lincoln",
+    "major_cities": [
+      "Omaha",
+      "Lincoln",
+      "Bellevue"
+    ],
+    "slug": "nebraska"
+  },
+  {
+    "code": "NV",
+    "name": "Nevada",
+    "capital": "Carson City",
+    "major_cities": [
+      "Las Vegas",
+      "Henderson",
+      "Reno"
+    ],
+    "slug": "nevada"
+  },
+  {
+    "code": "NH",
+    "name": "New Hampshire",
+    "capital": "Concord",
+    "major_cities": [
+      "Manchester",
+      "Nashua",
+      "Concord"
+    ],
+    "slug": "new-hampshire"
+  },
+  {
+    "code": "NJ",
+    "name": "New Jersey",
+    "capital": "Trenton",
+    "major_cities": [
+      "Newark",
+      "Jersey City",
+      "Paterson",
+      "Trenton"
+    ],
+    "slug": "new-jersey"
+  },
+  {
+    "code": "NM",
+    "name": "New Mexico",
+    "capital": "Santa Fe",
+    "major_cities": [
+      "Albuquerque",
+      "Las Cruces",
+      "Santa Fe"
+    ],
+    "slug": "new-mexico"
+  },
+  {
+    "code": "NY",
+    "name": "New York",
+    "capital": "Albany",
+    "major_cities": [
+      "New York City",
+      "Buffalo",
+      "Rochester",
+      "Syracuse"
+    ],
+    "slug": "new-york"
+  },
+  {
+    "code": "NC",
+    "name": "North Carolina",
+    "capital": "Raleigh",
+    "major_cities": [
+      "Charlotte",
+      "Raleigh",
+      "Greensboro",
+      "Durham"
+    ],
+    "slug": "north-carolina"
+  },
+  {
+    "code": "ND",
+    "name": "North Dakota",
+    "capital": "Bismarck",
+    "major_cities": [
+      "Fargo",
+      "Bismarck",
+      "Grand Forks"
+    ],
+    "slug": "north-dakota"
+  },
+  {
+    "code": "OH",
+    "name": "Ohio",
+    "capital": "Columbus",
+    "major_cities": [
+      "Columbus",
+      "Cleveland",
+      "Cincinnati",
+      "Toledo"
+    ],
+    "slug": "ohio"
+  },
+  {
+    "code": "OK",
+    "name": "Oklahoma",
+    "capital": "Oklahoma City",
+    "major_cities": [
+      "Oklahoma City",
+      "Tulsa",
+      "Norman"
+    ],
+    "slug": "oklahoma"
+  },
+  {
+    "code": "OR",
+    "name": "Oregon",
+    "capital": "Salem",
+    "major_cities": [
+      "Portland",
+      "Eugene",
+      "Salem",
+      "Gresham"
+    ],
+    "slug": "oregon"
+  },
+  {
+    "code": "PA",
+    "name": "Pennsylvania",
+    "capital": "Harrisburg",
+    "major_cities": [
+      "Philadelphia",
+      "Pittsburgh",
+      "Allentown"
+    ],
+    "slug": "pennsylvania"
+  },
+  {
+    "code": "RI",
+    "name": "Rhode Island",
+    "capital": "Providence",
+    "major_cities": [
+      "Providence",
+      "Warwick",
+      "Cranston"
+    ],
+    "slug": "rhode-island"
+  },
+  {
+    "code": "SC",
+    "name": "South Carolina",
+    "capital": "Columbia",
+    "major_cities": [
+      "Charleston",
+      "Columbia",
+      "North Charleston"
+    ],
+    "slug": "south-carolina"
+  },
+  {
+    "code": "SD",
+    "name": "South Dakota",
+    "capital": "Pierre",
+    "major_cities": [
+      "Sioux Falls",
+      "Rapid City",
+      "Aberdeen"
+    ],
+    "slug": "south-dakota"
+  },
+  {
+    "code": "TN",
+    "name": "Tennessee",
+    "capital": "Nashville",
+    "major_cities": [
+      "Nashville",
+      "Memphis",
+      "Knoxville",
+      "Chattanooga"
+    ],
+    "slug": "tennessee"
+  },
+  {
+    "code": "TX",
+    "name": "Texas",
+    "capital": "Austin",
+    "major_cities": [
+      "Houston",
+      "San Antonio",
+      "Dallas",
+      "Austin"
+    ],
+    "slug": "texas"
+  },
+  {
+    "code": "UT",
+    "name": "Utah",
+    "capital": "Salt Lake City",
+    "major_cities": [
+      "Salt Lake City",
+      "West Valley City",
+      "Provo"
+    ],
+    "slug": "utah"
+  },
+  {
+    "code": "VT",
+    "name": "Vermont",
+    "capital": "Montpelier",
+    "major_cities": [
+      "Burlington",
+      "South Burlington",
+      "Rutland"
+    ],
+    "slug": "vermont"
+  },
+  {
+    "code": "VA",
+    "name": "Virginia",
+    "capital": "Richmond",
+    "major_cities": [
+      "Virginia Beach",
+      "Norfolk",
+      "Chesapeake",
+      "Richmond"
+    ],
+    "slug": "virginia"
+  },
+  {
+    "code": "WA",
+    "name": "Washington",
+    "capital": "Olympia",
+    "major_cities": [
+      "Seattle",
+      "Spokane",
+      "Tacoma",
+      "Vancouver"
+    ],
+    "slug": "washington"
+  },
+  {
+    "code": "WV",
+    "name": "West Virginia",
+    "capital": "Charleston",
+    "major_cities": [
+      "Charleston",
+      "Huntington",
+      "Morgantown"
+    ],
+    "slug": "west-virginia"
+  },
+  {
+    "code": "WI",
+    "name": "Wisconsin",
+    "capital": "Madison",
+    "major_cities": [
+      "Milwaukee",
+      "Madison",
+      "Green Bay"
+    ],
+    "slug": "wisconsin"
+  },
+  {
+    "code": "WY",
+    "name": "Wyoming",
+    "capital": "Cheyenne",
+    "major_cities": [
+      "Cheyenne",
+      "Casper",
+      "Laramie"
+    ],
+    "slug": "wyoming"
+  },
+  {
+    "code": "DC",
+    "name": "District of Columbia",
+    "capital": "Washington",
+    "major_cities": [
+      "Washington DC"
+    ],
+    "slug": "district-of-columbia"
+  }
+]

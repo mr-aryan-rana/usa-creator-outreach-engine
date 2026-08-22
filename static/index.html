@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>USA Creator Finder & Automated Outreach Engine</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+  <div class="app-layout">
+    <!-- Sidebar Navigation -->
+    <aside class="sidebar">
+      <div class="brand">
+        <div class="brand-icon">
+          <i class="fa-solid fa-bolt-lightning"></i>
+        </div>
+        <div class="brand-text">
+          <span class="brand-title">CreatorEngine</span>
+          <span class="brand-subtitle">Node.js + React AI</span>
+        </div>
+      </div>
+
+      <nav class="nav-menu">
+        <button class="nav-item active" data-tab="dashboard-tab">
+          <i class="fa-solid fa-gauge-high"></i>
+          <span>Live Engine & Log</span>
+        </button>
+        <button class="nav-item" data-tab="creators-tab">
+          <i class="fa-solid fa-users"></i>
+          <span>Creator Database</span>
+          <span class="badge" id="sidebar-db-count">2,647</span>
+        </button>
+        <button class="nav-item" data-tab="campaigns-tab">
+          <i class="fa-solid fa-envelope-open-text"></i>
+          <span>Email Templates (7)</span>
+        </button>
+        <button class="nav-item" data-tab="states-tab">
+          <i class="fa-solid fa-flag-usa"></i>
+          <span>50 US States Registry</span>
+        </button>
+      </nav>
+
+      <div class="sidebar-footer">
+        <div class="system-status" id="sidebar-status-box">
+          <div class="status-indicator offline" id="status-dot"></div>
+          <div class="status-info">
+            <span class="status-title" id="status-text">Engine Stopped</span>
+            <span class="status-sub" id="status-subtext">Click toggle to start</span>
+          </div>
+        </div>
+      </div>
+    </aside>
+
+    <!-- Main Content Area -->
+    <main class="main-content">
+      <!-- Top Header & Live Control Bar -->
+      <header class="top-header">
+        <div class="header-title">
+          <h1>USA Creator Finding & Outreach Engine</h1>
+          <p>Automated Serper Search (1 credit) ➔ OpenAI GPT Extraction ➔ SMTP Verification ➔ Gmail Outreach</p>
+        </div>
+        
+        <div class="header-controls">
+          <!-- Start / Stop Toggle Button -->
+          <div class="toggle-container">
+            <span class="toggle-label" id="toggle-label-text">SERVICE ENGINE:</span>
+            <button class="btn-toggle-engine" id="btn-toggle-engine">
+              <i class="fa-solid fa-play" id="toggle-icon"></i>
+              <span id="toggle-btn-text">START SERVICE</span>
+            </button>
+          </div>
+          
+          <button class="btn btn-outline" id="btn-refresh-data">
+            <i class="fa-solid fa-rotate"></i> Refresh
+          </button>
+          <button class="btn btn-primary" id="btn-export-csv">
+            <i class="fa-solid fa-file-csv"></i> Export CSV
+          </button>
+          <a href="/api/logout" class="btn btn-outline" id="btn-logout" style="border-color: rgba(255, 75, 75, 0.4); color: #ff7575; text-decoration: none;">
+            <i class="fa-solid fa-right-from-bracket"></i> Logout
+          </a>
+        </div>
+      </header>
+
+      <!-- Quota Metrics Grid -->
+      <div class="metrics-grid">
+        <div class="metric-card glow-purple">
+          <div class="metric-icon"><i class="fa-solid fa-magnifying-glass-chart"></i></div>
+          <div class="metric-body">
+            <span class="metric-label">Serper Daily Credits</span>
+            <div class="metric-progress-wrapper">
+              <span class="metric-value" id="stat-serper-credits">0 / 150</span>
+              <div class="progress-bar"><div class="progress-fill" id="fill-serper" style="width: 0%;"></div></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="metric-card glow-emerald">
+          <div class="metric-icon"><i class="fa-solid fa-paper-plane"></i></div>
+          <div class="metric-body">
+            <span class="metric-label">Emails Sent Today</span>
+            <div class="metric-progress-wrapper">
+              <span class="metric-value" id="stat-emails-sent">0 / 200</span>
+              <div class="progress-bar"><div class="progress-fill bg-emerald" id="fill-emails" style="width: 0%;"></div></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="metric-card glow-cyan">
+          <div class="metric-icon"><i class="fa-solid fa-hourglass-half"></i></div>
+          <div class="metric-body">
+            <span class="metric-label">Current Batch Progress</span>
+            <div class="metric-progress-wrapper">
+              <span class="metric-value" id="stat-batch-count">0 / 30</span>
+              <span class="metric-sub" id="stat-rest-timer">Next Rest: 30 remaining</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="metric-card glow-amber">
+          <div class="metric-icon"><i class="fa-solid fa-database"></i></div>
+          <div class="metric-body">
+            <span class="metric-label">Total Creators in DB</span>
+            <span class="metric-value" id="stat-total-creators">2,647</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Tab Content 1: Live Engine & Activity Log Terminal -->
+      <section id="dashboard-tab" class="tab-pane active">
+        <!-- Live Terminal Card -->
+        <div class="panel terminal-panel">
+          <div class="panel-header">
+            <h3><i class="fa-solid fa-terminal"></i> Live Engine Real-Time Terminal Log</h3>
+            <div class="terminal-actions">
+              <span class="badge badge-pulse" id="live-stream-badge">LIVE STREAM</span>
+              <button class="btn btn-sm btn-outline" id="btn-clear-terminal"><i class="fa-solid fa-trash-can"></i> Clear Log</button>
+            </div>
+          </div>
+          <div class="panel-body terminal-body" id="terminal-feed">
+            <div class="terminal-line system">[SYSTEM] Engine initialization complete. Click 'START SERVICE' to begin continuous loop.</div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Tab Content 2: Creator Database Browser (Sorted Newest First) -->
+      <section id="creators-tab" class="tab-pane">
+        <div class="panel">
+          <div class="panel-header">
+            <h3><i class="fa-solid fa-database"></i> PostgreSQL Creator Database Browser (Newest First)</h3>
+            <div class="filter-controls">
+              <input type="text" id="db-search-input" class="form-control form-control-sm" placeholder="Search by name, email, location...">
+              <select id="db-contact-filter" class="form-control form-control-sm">
+                <option value="all">All Contacts</option>
+                <option value="email">Has Email</option>
+                <option value="phone">Has Mobile Phone</option>
+                <option value="both">Has Both (Email & Phone)</option>
+              </select>
+              <select id="db-platform-filter" class="form-control form-control-sm">
+                <option value="all">All Platforms</option>
+                <option value="instagram">Instagram</option>
+                <option value="tiktok">TikTok</option>
+                <option value="facebook">Facebook</option>
+                <option value="youtube">YouTube</option>
+              </select>
+              <select id="db-state-filter" class="form-control form-control-sm">
+                <option value="all">All States</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="panel-body">
+            <div class="table-responsive">
+              <table class="data-table">
+                <thead>
+                  <tr>
+                    <th>ID</th>
+                    <th>Creator Name</th>
+                    <th>Platform</th>
+                    <th>Profile Link</th>
+                    <th>Email Address</th>
+                    <th>Phone</th>
+                    <th>SMTP Validation</th>
+                    <th>Location</th>
+                    <th>Created At</th>
+                  </tr>
+                </thead>
+                <tbody id="db-table-body">
+                  <!-- Creators loaded dynamically (Newest First) -->
+                </tbody>
+              </table>
+            </div>
+
+            <!-- Pagination Bar -->
+            <div class="pagination-bar">
+              <span class="pagination-info" id="pagination-text">Showing 1 to 20 creators</span>
+              <div class="pagination-controls">
+                <button class="btn btn-sm btn-outline" id="btn-prev-page"><i class="fa-solid fa-chevron-left"></i> Prev</button>
+                <span class="page-indicator" id="page-num-indicator">Page 1</span>
+                <button class="btn btn-sm btn-outline" id="btn-next-page">Next <i class="fa-solid fa-chevron-right"></i></button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Tab Content 3: Email Campaigns & Templates (7 Templates) -->
+      <section id="campaigns-tab" class="tab-pane">
+        <div class="panel">
+          <div class="panel-header">
+            <h3><i class="fa-solid fa-envelope-open-text"></i> Outreach Email Templates (7 Campaigns in DB)</h3>
+            <p>Auto-rotating templates with dynamic spintax and personalization</p>
+          </div>
+          <div class="panel-body">
+            <div class="campaigns-list" id="campaigns-list">
+              <!-- Templates rendered dynamically -->
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Tab Content 4: 50 US States Registry -->
+      <section id="states-tab" class="tab-pane">
+        <div class="panel">
+          <div class="panel-header">
+            <h3><i class="fa-solid fa-map-location"></i> All 50 USA States Search Registry</h3>
+          </div>
+          <div class="panel-body">
+            <div class="registry-grid" id="states-grid">
+              <!-- States rendered dynamically -->
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <script src="/app.js"></script>
+</body>
+</html>

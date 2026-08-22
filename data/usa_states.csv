@@ -1,0 +1,52 @@
+code,name,capital,major_cities,slug
+AL,Alabama,Montgomery,"Birmingham, Montgomery, Huntsville, Mobile",alabama
+AK,Alaska,Juneau,"Anchorage, Fairbanks, Juneau",alaska
+AZ,Arizona,Phoenix,"Phoenix, Tucson, Mesa, Scottsdale",arizona
+AR,Arkansas,Little Rock,"Little Rock, Fort Smith, Fayetteville",arkansas
+CA,California,Sacramento,"Los Angeles, San Francisco, San Diego, San Jose",california
+CO,Colorado,Denver,"Denver, Colorado Springs, Aurora, Boulder",colorado
+CT,Connecticut,Hartford,"Bridgeport, New Haven, Stamford, Hartford",connecticut
+DE,Delaware,Dover,"Wilmington, Dover, Newark",delaware
+FL,Florida,Tallahassee,"Miami, Orlando, Tampa, Jacksonville",florida
+GA,Georgia,Atlanta,"Atlanta, Augusta, Columbus, Savannah",georgia
+HI,Hawaii,Honolulu,"Honolulu, Hilo, Kailua",hawaii
+ID,Idaho,Boise,"Boise, Meridian, Nampa",idaho
+IL,Illinois,Springfield,"Chicago, Aurora, Naperville, Springfield",illinois
+IN,Indiana,Indianapolis,"Indianapolis, Fort Wayne, Evansville",indiana
+IA,Iowa,Des Moines,"Des Moines, Cedar Rapids, Davenport",iowa
+KS,Kansas,Topeka,"Wichita, Overland Park, Kansas City, Topeka",kansas
+KY,Kentucky,Frankfort,"Louisville, Lexington, Bowling Green",kentucky
+LA,Louisiana,Baton Rouge,"New Orleans, Baton Rouge, Shreveport",louisiana
+ME,Maine,Augusta,"Portland, Lewiston, Bangor",maine
+MD,Maryland,Annapolis,"Baltimore, Frederick, Rockville",maryland
+MA,Massachusetts,Boston,"Boston, Worcester, Springfield, Cambridge",massachusetts
+MI,Michigan,Lansing,"Detroit, Grand Rapids, Warren, Ann Arbor",michigan
+MN,Minnesota,Saint Paul,"Minneapolis, Saint Paul, Rochester",minnesota
+MS,Mississippi,Jackson,"Jackson, Gulfport, Southaven",mississippi
+MO,Missouri,Jefferson City,"Kansas City, St. Louis, Springfield",missouri
+MT,Montana,Helena,"Billings, Missoula, Great Falls",montana
+NE,Nebraska,Lincoln,"Omaha, Lincoln, Bellevue",nebraska
+NV,Nevada,Carson City,"Las Vegas, Henderson, Reno",nevada
+NH,New Hampshire,Concord,"Manchester, Nashua, Concord",new-hampshire
+NJ,New Jersey,Trenton,"Newark, Jersey City, Paterson, Trenton",new-jersey
+NM,New Mexico,Santa Fe,"Albuquerque, Las Cruces, Santa Fe",new-mexico
+NY,New York,Albany,"New York City, Buffalo, Rochester, Syracuse",new-york
+NC,North Carolina,Raleigh,"Charlotte, Raleigh, Greensboro, Durham",north-carolina
+ND,North Dakota,Bismarck,"Fargo, Bismarck, Grand Forks",north-dakota
+OH,Ohio,Columbus,"Columbus, Cleveland, Cincinnati, Toledo",ohio
+OK,Oklahoma,Oklahoma City,"Oklahoma City, Tulsa, Norman",oklahoma
+OR,Oregon,Salem,"Portland, Eugene, Salem, Gresham",oregon
+PA,Pennsylvania,Harrisburg,"Philadelphia, Pittsburgh, Allentown",pennsylvania
+RI,Rhode Island,Providence,"Providence, Warwick, Cranston",rhode-island
+SC,South Carolina,Columbia,"Charleston, Columbia, North Charleston",south-carolina
+SD,South Dakota,Pierre,"Sioux Falls, Rapid City, Aberdeen",south-dakota
+TN,Tennessee,Nashville,"Nashville, Memphis, Knoxville, Chattanooga",tennessee
+TX,Texas,Austin,"Houston, San Antonio, Dallas, Austin",texas
+UT,Utah,Salt Lake City,"Salt Lake City, West Valley City, Provo",utah
+VT,Vermont,Montpelier,"Burlington, South Burlington, Rutland",vermont
+VA,Virginia,Richmond,"Virginia Beach, Norfolk, Chesapeake, Richmond",virginia
+WA,Washington,Olympia,"Seattle, Spokane, Tacoma, Vancouver",washington
+WV,West Virginia,Charleston,"Charleston, Huntington, Morgantown",west-virginia
+WI,Wisconsin,Madison,"Milwaukee, Madison, Green Bay",wisconsin
+WY,Wyoming,Cheyenne,"Cheyenne, Casper, Laramie",wyoming
+DC,District of Columbia,Washington,Washington DC,district-of-columbia

@@ -1,0 +1,182 @@
+[
+  {
+    "category": "Love & Relationships",
+    "primary_tag": "love",
+    "related_hashtags": [
+      "love",
+      "relationship",
+      "dating",
+      "couplegoals",
+      "romance",
+      "lovestory"
+    ],
+    "slug": "love-relationships"
+  },
+  {
+    "category": "Beauty & Makeup",
+    "primary_tag": "beauty",
+    "related_hashtags": [
+      "beauty",
+      "makeup",
+      "skincare",
+      "cosmetics",
+      "glam",
+      "beautyhacks"
+    ],
+    "slug": "beauty-makeup"
+  },
+  {
+    "category": "Fashion & Style",
+    "primary_tag": "fashion",
+    "related_hashtags": [
+      "fashion",
+      "style",
+      "ootd",
+      "streetwear",
+      "model",
+      "fashionstyle"
+    ],
+    "slug": "fashion-style"
+  },
+  {
+    "category": "Health & Fitness",
+    "primary_tag": "fitness",
+    "related_hashtags": [
+      "fitness",
+      "gym",
+      "workout",
+      "wellness",
+      "healthylifestyle",
+      "fitspo"
+    ],
+    "slug": "health-fitness"
+  },
+  {
+    "category": "Lifestyle & Vlogs",
+    "primary_tag": "lifestyle",
+    "related_hashtags": [
+      "lifestyle",
+      "vlog",
+      "dailyroutine",
+      "aesthetic",
+      "life",
+      "vlogger"
+    ],
+    "slug": "lifestyle-vlogs"
+  },
+  {
+    "category": "Food & Cooking",
+    "primary_tag": "food",
+    "related_hashtags": [
+      "food",
+      "foodie",
+      "recipe",
+      "cooking",
+      "chef",
+      "yummy"
+    ],
+    "slug": "food-cooking"
+  },
+  {
+    "category": "Travel & Adventure",
+    "primary_tag": "travel",
+    "related_hashtags": [
+      "travel",
+      "wanderlust",
+      "adventure",
+      "explore",
+      "vacation",
+      "travelgram"
+    ],
+    "slug": "travel-adventure"
+  },
+  {
+    "category": "Gaming & Esports",
+    "primary_tag": "gaming",
+    "related_hashtags": [
+      "gaming",
+      "gamer",
+      "streamer",
+      "twitch",
+      "esports",
+      "gameplay"
+    ],
+    "slug": "gaming-esports"
+  },
+  {
+    "category": "Tech & Gadgets",
+    "primary_tag": "tech",
+    "related_hashtags": [
+      "tech",
+      "gadgets",
+      "technology",
+      "ai",
+      "software",
+      "techreview"
+    ],
+    "slug": "tech-gadgets"
+  },
+  {
+    "category": "Business & Entrepreneurship",
+    "primary_tag": "business",
+    "related_hashtags": [
+      "business",
+      "entrepreneur",
+      "startup",
+      "marketing",
+      "management"
+    ],
+    "slug": "business-entrepreneurship"
+  },
+  {
+    "category": "Parenting & Family",
+    "primary_tag": "family",
+    "related_hashtags": [
+      "parenting",
+      "momlife",
+      "dadlife",
+      "family",
+      "kids",
+      "familyvlog"
+    ],
+    "slug": "parenting-family"
+  },
+  {
+    "category": "Music & Entertainment",
+    "primary_tag": "music",
+    "related_hashtags": [
+      "music",
+      "musician",
+      "singer",
+      "artist",
+      "dance",
+      "song"
+    ],
+    "slug": "music-entertainment"
+  },
+  {
+    "category": "Photography & Video",
+    "primary_tag": "photography",
+    "related_hashtags": [
+      "photography",
+      "photographer",
+      "videography",
+      "creator",
+      "contentcreator"
+    ],
+    "slug": "photography-video"
+  },
+  {
+    "category": "Pets & Animals",
+    "primary_tag": "pets",
+    "related_hashtags": [
+      "pets",
+      "dogs",
+      "cats",
+      "animalsoftiktok",
+      "petlover",
+      "dogsofinstagram"
+    ],
+    "slug": "pets-animals"
+  }
+]

@@ -348,19 +348,21 @@ body {
 .panel-header h3 { font-size: 0.95rem; font-weight: 700; display: flex; align-items: center; gap: 0.5rem; }
 .panel-body { padding: 1.25rem; }
 
-/* Terminal Panel */
+/* Terminal Panel & Log Stream */
 .terminal-panel .panel-body { padding: 0; }
 
-.terminal-body {
+.terminal-feed, .terminal-body {
   background: #06080d;
+  border-radius: 10px;
   font-family: var(--font-mono);
   font-size: 0.82rem;
   padding: 1rem 1.25rem;
-  height: 400px;
+  height: 420px;
   overflow-y: auto;
   display: flex;
   flex-direction: column;
-  gap: 0.5rem;
+  gap: 0.45rem;
+  border: 1px solid rgba(255, 255, 255, 0.05);
 }
 
 .terminal-line {
@@ -375,11 +377,11 @@ body {
 .terminal-line.action { color: #a78bfa; }
 .terminal-line.error { color: #f87171; }
 
-.badge-pulse {
+.pulse-tag, .badge-pulse {
   background: rgba(16, 185, 129, 0.2);
   color: var(--secondary);
   border: 1px solid rgba(16, 185, 129, 0.4);
-  padding: 0.25rem 0.65rem;
+  padding: 0.2rem 0.6rem;
   border-radius: 20px;
   font-size: 0.72rem;
   font-family: var(--font-mono);

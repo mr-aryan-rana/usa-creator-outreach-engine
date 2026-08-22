@@ -57,7 +57,8 @@ function buildSearchQuery({ platform = 'instagram', stateCode = 'CA', tag = 'lov
   const cleanTag = tag.trim().replace(/^#+/, '').toLowerCase() || 'love';
   
   if (mode === 'phone_only') {
-    return `${siteFilter} "${cleanTag}" "+1" "${stateName}"`;
+    // High-Yield US Phone Number Query Format: site:<platform>.com "<tag>" "Call" OR "Text" OR "Phone" "<stateName>"
+    return `${siteFilter} "${cleanTag}" "Call" OR "Text" OR "Phone" "${stateName}"`;
   }
 
   return `${siteFilter} "${cleanTag}" "@gmail.com" "${stateName}"`;

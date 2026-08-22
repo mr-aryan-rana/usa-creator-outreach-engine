@@ -59,6 +59,8 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   });
 
+  const engineModeSelect = document.getElementById("engine-mode-select");
+
   // Start / Stop Toggle Button Handler
   btnToggleEngine.addEventListener("click", async () => {
     btnToggleEngine.disabled = true;
@@ -68,7 +70,12 @@ document.addEventListener("DOMContentLoaded", () => {
         const data = await res.json();
         updateEngineUI(data.status);
       } else {
-        const res = await fetch("/api/engine/start", { method: "POST" });
+        const mode = engineModeSelect ? engineModeSelect.value : "email";
+        const res = await fetch("/api/engine/start", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ mode: mode })
+        });
         const data = await res.json();
         updateEngineUI(data.status);
       }
@@ -82,6 +89,13 @@ document.addEventListener("DOMContentLoaded", () => {
   function updateEngineUI(status) {
     if (!status) return;
     engineState = status.state;
+
+    if (status.mode && engineModeSelect) {
+      engineModeSelect.value = status.mode;
+    }
+    if (engineModeSelect) {
+      engineModeSelect.disabled = (engineState === 'RUNNING' || engineState === 'AUTO_RESTING');
+    }
 
     // Quotas & Stats Update
     const serperUsed = status.serperCreditsUsedToday || 0;
@@ -102,9 +116,9 @@ document.addEventListener("DOMContentLoaded", () => {
       toggleBtnText.textContent = "STOP SERVICE";
 
       statusDot.className = "status-indicator running";
-      statusText.textContent = "ENGINE RUNNING";
-      statusSubtext.textContent = "Loop Active: Searching & Sending";
-      statRestTimer.textContent = `Batch: ${batchCount}/30 sent`;
+      statusText.textContent = `ENGINE RUNNING (${(status.mode || 'email').toUpperCase()})`;
+      statusSubtext.textContent = status.mode === 'phone_only' ? "Phone-Only Collector Active" : "Loop Active: Searching & Sending";
+      statRestTimer.textContent = status.mode === 'phone_only' ? "Phone Mode Active" : `Batch: ${batchCount}/30 sent`;
 
     } else if (engineState === 'AUTO_RESTING') {
       btnToggleEngine.className = "btn-toggle-engine is-resting";

@@ -15,6 +15,7 @@ class AutomationEngine extends EventEmitter {
   constructor() {
     super();
     this.state = 'STOPPED'; // 'STOPPED', 'RUNNING', 'AUTO_RESTING'
+    this.mode = 'email'; // 'email' or 'phone_only'
     this.serperCreditsUsedToday = 0;
     this.emailsSentToday = 0;
     this.emailsSentInBatch = 0;
@@ -54,6 +55,7 @@ class AutomationEngine extends EventEmitter {
   getStatus() {
     return {
       state: this.state,
+      mode: this.mode,
       serperCreditsUsedToday: this.serperCreditsUsedToday,
       emailsSentToday: this.emailsSentToday,
       emailsSentInBatch: this.emailsSentInBatch,
@@ -63,8 +65,12 @@ class AutomationEngine extends EventEmitter {
     };
   }
 
-  async start() {
+  async start(options = {}) {
     await this.refreshTodayStats();
+
+    if (options.mode && (options.mode === 'email' || options.mode === 'phone_only')) {
+      this.mode = options.mode;
+    }
 
     if (this.state === 'RUNNING') {
       this.log('Engine is already running', 'warn');
@@ -82,7 +88,7 @@ class AutomationEngine extends EventEmitter {
     this.currentCategoryIdx = Math.floor(Math.random() * CATEGORIES.length);
 
     this.state = 'RUNNING';
-    this.log('Automation Engine STARTED', 'success');
+    this.log(`Automation Engine STARTED in [${this.mode.toUpperCase()}] mode`, 'success');
     this.loopPromise = this.runLoop();
   }
 
@@ -103,7 +109,7 @@ class AutomationEngine extends EventEmitter {
           break;
         }
 
-        if (this.emailsSentToday >= this.maxEmailsPerDay) {
+        if (this.mode === 'email' && this.emailsSentToday >= this.maxEmailsPerDay) {
           this.log(`Daily Email limit reached (${this.maxEmailsPerDay}). Pausing engine for today.`, 'warn');
           this.state = 'STOPPED';
           break;
@@ -123,11 +129,12 @@ class AutomationEngine extends EventEmitter {
           }
         }
 
-        // Optimized query format: site:<platform>.com "<tag>" "@gmail.com" "<State_Name>"
+        // Optimized query format depending on mode
         const queryText = buildSearchQuery({
           platform: platform,
           stateCode: stateObj.code,
-          tag: categoryObj.primary_tag
+          tag: categoryObj.primary_tag,
+          mode: this.mode
         });
 
         // Anti-Duplication Check: Skip query if executed earlier today
@@ -138,7 +145,7 @@ class AutomationEngine extends EventEmitter {
           continue;
         }
 
-        this.log(`Executing 1 Serper Search Credit: [Query: ${queryText}]`, 'action');
+        this.log(`Executing 1 Serper Search Credit [Mode: ${this.mode.toUpperCase()}]: [Query: ${queryText}]`, 'action');
 
         // 3. Execute 1 Serper Search
         const searchResult = await executeSerperSearch(queryText, 20);
@@ -148,28 +155,31 @@ class AutomationEngine extends EventEmitter {
 
         if (this.state !== 'RUNNING') break;
 
-        // Pre-filter organic results to retain social profiles or snippets with email addresses
+        // Pre-filter organic results to retain social profiles or snippets with email/phone
+        const isPhoneOnlyMode = this.mode === 'phone_only';
         const relevantOrganic = (searchResult.organic || []).filter(item => {
           const link = (item.link || '').toLowerCase();
           const snippet = (item.snippet || '').toLowerCase();
           const title = (item.title || '').toLowerCase();
           const isSocial = link.includes('facebook.com') || link.includes('instagram.com') || link.includes('tiktok.com') || link.includes('youtube.com');
           const hasEmail = snippet.includes('@') || title.includes('@');
-          return isSocial || hasEmail;
+          const hasPhone = /(\+?1[-.\s]?)?\(?\d{3}\)?[-.\s]?\d{3}[-.\s]?\d{4}/.test(`${title} ${snippet}`);
+          return isSocial || hasEmail || (isPhoneOnlyMode && hasPhone);
         });
 
         if (relevantOrganic.length === 0) {
-          this.log(`No social profiles or emails found in raw results for "${queryText}". Moving to next platform...`, 'info');
+          this.log(`No relevant profiles or contacts found in raw results for "${queryText}". Moving to next platform...`, 'info');
           await this.sleep(1000);
           continue;
         }
 
         // 4. OpenAI GPT Filter & Extractor
-        this.log(`Submitting ${relevantOrganic.length} relevant organic snippets to OpenAI GPT-4o-mini...`, 'action');
+        this.log(`Submitting ${relevantOrganic.length} relevant organic snippets to OpenAI GPT-4o-mini [Mode: ${this.mode.toUpperCase()}]...`, 'action');
         const extractedCreators = await extractCreatorsFromSearch({
           organic: relevantOrganic,
           platform: platform,
-          targetState: stateObj.name
+          targetState: stateObj.name,
+          mode: this.mode
         });
 
         this.log(`OpenAI extracted ${extractedCreators.length} valid creators matching filter.`, 'success');
@@ -179,10 +189,16 @@ class AutomationEngine extends EventEmitter {
         const newEmailsToValidate = [];
         for (const creator of extractedCreators) {
           try {
-            // Strict filter: ONLY insert creators that have a complete email address containing '@'
-            if (!creator.email || typeof creator.email !== 'string' || !creator.email.includes('@') || creator.email.trim().toLowerCase() === 'gmail.com') {
-              this.log(`Skipping creator (${creator.name}): No valid email address found.`, 'info');
-              continue;
+            if (this.mode === 'email') {
+              if (!creator.email || typeof creator.email !== 'string' || !creator.email.includes('@') || creator.email.trim().toLowerCase() === 'gmail.com') {
+                this.log(`Skipping creator (${creator.name}): No valid email address found.`, 'info');
+                continue;
+              }
+            } else if (this.mode === 'phone_only') {
+              if ((!creator.phone || creator.phone.trim().length < 7) && (!creator.email || !creator.email.includes('@'))) {
+                this.log(`Skipping creator (${creator.name}): No phone number or contact info found.`, 'info');
+                continue;
+              }
             }
 
             const saved = await insertCreator({
@@ -191,7 +207,8 @@ class AutomationEngine extends EventEmitter {
               profile_url: creator.profile_url,
               phone: creator.phone,
               location: creator.location || stateObj.name,
-              email: creator.email
+              email: creator.email,
+              allow_phone_only: (this.mode === 'phone_only')
             });
 
             if (saved.is_new_email && saved.email_id) {
@@ -206,8 +223,8 @@ class AutomationEngine extends EventEmitter {
 
         if (this.state !== 'RUNNING') break;
 
-        // 6. Real-time DNS MX + SMTP Socket Handshake Email Validation (No email sent)
-        if (newEmailsToValidate.length > 0) {
+        // 6. Real-time DNS MX + SMTP Socket Handshake Email Validation (Only in email mode)
+        if (this.mode === 'email' && newEmailsToValidate.length > 0) {
           this.log(`Running real-time DNS MX & SMTP Handshake Validation on ${newEmailsToValidate.length} new email addresses...`, 'action');
           for (const item of newEmailsToValidate) {
             const valRes = await validateEmail(item.id, item.address);
@@ -217,8 +234,12 @@ class AutomationEngine extends EventEmitter {
 
         if (this.state !== 'RUNNING') break;
 
-        // 7. Process Outreach Email Sending
-        await this.processOutreachQueue();
+        // 7. Process Outreach Email Sending (Only in email mode)
+        if (this.mode === 'email') {
+          await this.processOutreachQueue();
+        } else {
+          this.log(`Phone-Only Collector Mode Active: Phone contacts saved to database. Email sending skipped.`, 'info');
+        }
 
       } catch (err) {
         this.log(`Engine Loop Error: ${err.message}`, 'error');

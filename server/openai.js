@@ -8,7 +8,7 @@ const openai = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY
 });
 
-async function extractCreatorsFromSearch({ organic, platform, targetState }) {
+async function extractCreatorsFromSearch({ organic, platform, targetState, mode = 'email' }) {
   if (!process.env.OPENAI_API_KEY) {
     throw new Error("OPENAI_API_KEY is missing from .env file.");
   }
@@ -16,6 +16,8 @@ async function extractCreatorsFromSearch({ organic, platform, targetState }) {
   if (!organic || organic.length === 0) {
     return [];
   }
+
+  const isPhoneOnly = mode === 'phone_only';
 
   const prompt = `
 You are an expert AI data extraction assistant for content creators, influencers, and brands.
@@ -26,21 +28,20 @@ ${JSON.stringify(organic, null, 2)}
 
 STRICT extraction RULES:
 1. Extract content creators, influencers, brands, or page contacts found in the search results.
-2. IF ANY SNIPPET CONTAINS A VALID EMAIL ADDRESS (e.g. "tasteoftherunway@gmail.com"), YOU MUST EXTRACT THAT CREATOR/CONTACT RECORD.
+2. ${isPhoneOnly ? 'EXTRACT EVERY RECORD THAT CONTAINS A VALID US PHONE NUMBER OR EMAIL ADDRESS.' : 'IF ANY SNIPPET CONTAINS A VALID EMAIL ADDRESS (e.g. "tasteoftherunway@gmail.com"), YOU MUST EXTRACT THAT CREATOR/CONTACT RECORD.'}
 3. For each creator:
    - "first_name": First Name or Organization Name
    - "last_name": Last Name (or null if unavailable)
    - "name": Full Name, Page Title, or Organization Name (e.g. "Fashion Project DC")
    - "platform": "${platform}"
    - "profile_url": The exact link URL from the result snippet or handle profile URL
-   - "email": The complete valid email address (MUST contain "@", e.g. "tasteoftherunway@gmail.com")
-   - "phone": US Phone number if present in snippet, or null
+   - "email": Complete valid email address if present, or null
+   - "phone": US Phone number if present in snippet (e.g. "+1 (859) 568-5311"), or null
    - "location": US City/State confirmed from snippet (default to "${targetState}")
    - "bio": Short snippet description
 
 CRITICAL MANDATORY FILTER RULE:
-- YOU MUST ONLY INCLUDE CREATORS THAT HAVE A COMPLETE VALID EMAIL ADDRESS (containing "@").
-- REJECT AND DROP ENTRIES THAT HAVE NO EMAIL ADDRESS.
+${isPhoneOnly ? '- YOU MUST INCLUDE CREATORS THAT HAVE A VALID PHONE NUMBER OR EMAIL ADDRESS.\n- REJECT ENTRIES THAT HAVE NEITHER PHONE NOR EMAIL.' : '- YOU MUST ONLY INCLUDE CREATORS THAT HAVE A COMPLETE VALID EMAIL ADDRESS (containing "@").\n- REJECT AND DROP ENTRIES THAT HAVE NO EMAIL ADDRESS.'}
 
 Return your response strictly as a JSON object with key "creators":
 {
@@ -71,17 +72,26 @@ Return your response strictly as a JSON object with key "creators":
     const parsed = JSON.parse(response.choices[0].message.content);
     let creators = parsed.creators || [];
     
-    // Strict post-extraction filter: ONLY return creators that have a complete email containing '@'
-    creators = creators.filter(c => c.email && typeof c.email === 'string' && c.email.includes('@') && c.email.trim().toLowerCase() !== 'gmail.com');
+    // Post-extraction filter
+    if (isPhoneOnly) {
+      creators = creators.filter(c => (c.phone && typeof c.phone === 'string' && c.phone.trim().length >= 7) || (c.email && c.email.includes('@')));
+    } else {
+      creators = creators.filter(c => c.email && typeof c.email === 'string' && c.email.includes('@') && c.email.trim().toLowerCase() !== 'gmail.com');
+    }
 
-    // DETERMINISTIC REGEX FALLBACK: Scan all organic search snippets to ensure 0% email loss
+    // DETERMINISTIC REGEX FALLBACK
     const emailRegex = /\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}\b/g;
-    const existingEmails = new Set(creators.map(c => c.email.toLowerCase()));
+    const phoneRegex = /(\+?1[-.\s]?)?\(?\d{3}\)?[-.\s]?\d{3}[-.\s]?\d{4}/g;
+    
+    const existingEmails = new Set(creators.map(c => (c.email || '').toLowerCase()).filter(Boolean));
+    const existingPhones = new Set(creators.map(c => (c.phone || '').replace(/\D/g, '')).filter(Boolean));
 
     for (const item of (organic || [])) {
       const text = `${item.title || ''} ${item.snippet || ''}`;
-      const matches = text.match(emailRegex) || [];
-      for (const rawEmail of matches) {
+      
+      // 1. Email Regex Scan
+      const emailMatches = text.match(emailRegex) || [];
+      for (const rawEmail of emailMatches) {
         const cleanEmail = rawEmail.trim().toLowerCase();
         if (cleanEmail === 'gmail.com' || cleanEmail.includes('example.com') || cleanEmail.endsWith('.png') || cleanEmail.endsWith('.jpg')) continue;
 
@@ -91,7 +101,7 @@ Return your response strictly as a JSON object with key "creators":
           const rawTitle = (item.title || 'Content Creator').split('|')[0].split('-')[0].trim();
           const cleanName = rawTitle.length > 2 ? rawTitle : 'Content Creator';
           const nameParts = cleanName.split(' ');
-          const phoneMatch = text.match(/(\+?1[-.\s]?)?\(?\d{3}\)?[-.\s]?\d{3}[-.\s]?\d{4}/);
+          const phoneMatch = text.match(phoneRegex);
 
           creators.push({
             first_name: nameParts[0] || 'Dear',
@@ -104,6 +114,35 @@ Return your response strictly as a JSON object with key "creators":
             location: targetState,
             bio: item.snippet || ''
           });
+        }
+      }
+
+      // 2. Phone Regex Scan (for Phone Only Mode)
+      if (isPhoneOnly) {
+        const phoneMatches = text.match(phoneRegex) || [];
+        for (const rawPhone of phoneMatches) {
+          const digits = rawPhone.replace(/\D/g, '');
+          if (digits.length < 10) continue;
+
+          if (!existingPhones.has(digits)) {
+            existingPhones.add(digits);
+            
+            const rawTitle = (item.title || 'Content Creator').split('|')[0].split('-')[0].trim();
+            const cleanName = rawTitle.length > 2 ? rawTitle : 'Content Creator';
+            const nameParts = cleanName.split(' ');
+
+            creators.push({
+              first_name: nameParts[0] || 'Dear',
+              last_name: nameParts.slice(1).join(' ') || null,
+              name: cleanName,
+              platform: platform,
+              profile_url: item.link || `https://www.${platform}.com`,
+              email: null,
+              phone: rawPhone,
+              location: targetState,
+              bio: item.snippet || ''
+            });
+          }
         }
       }
     }

@@ -49,14 +49,17 @@ const PLATFORM_SITES = {
   youtube: 'site:youtube.com'
 };
 
-function buildSearchQuery({ platform = 'instagram', stateCode = 'CA', tag = 'love' }) {
+function buildSearchQuery({ platform = 'instagram', stateCode = 'CA', tag = 'love', mode = 'email' }) {
   const siteFilter = PLATFORM_SITES[platform.toLowerCase()] || 'site:instagram.com';
   const stateInfo = getState(stateCode);
   const stateName = stateInfo ? stateInfo.name : stateCode;
   
   const cleanTag = tag.trim().replace(/^#+/, '').toLowerCase() || 'love';
   
-  // Optimized format for 100% email yield: site:<platform>.com "<category_name>" "@gmail.com" "<state_name>"
+  if (mode === 'phone_only') {
+    return `${siteFilter} "${cleanTag}" "+1" "${stateName}"`;
+  }
+
   return `${siteFilter} "${cleanTag}" "@gmail.com" "${stateName}"`;
 }
 

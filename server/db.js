@@ -144,11 +144,15 @@ async function getCreators({ page = 1, limit = 20, search = '', platform = '', l
   };
 }
 
-async function insertCreator({ name, platform, profile_url, phone, location, email }) {
+async function insertCreator({ name, platform, profile_url, phone, location, email, allow_phone_only = false }) {
   const hasEmail = email && typeof email === 'string' && email.includes('@') && email.trim().toLowerCase() !== 'gmail.com';
+  const hasPhone = phone && typeof phone === 'string' && phone.trim().length >= 7;
 
-  // STRICT GATEKEEPER: Reject DB insertion if email is missing, null, or invalid
-  if (!hasEmail) {
+  // In email mode (allow_phone_only = false), require email. In phone_only mode, require phone OR email.
+  if (!allow_phone_only && !hasEmail) {
+    return { creator_id: null, email_id: null, is_new_email: false, skipped: true };
+  }
+  if (allow_phone_only && !hasEmail && !hasPhone) {
     return { creator_id: null, email_id: null, is_new_email: false, skipped: true };
   }
 

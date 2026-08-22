@@ -69,6 +69,15 @@
         </div>
         
         <div class="header-controls">
+          <!-- Engine Mode Selector -->
+          <div class="mode-select-container" style="display: flex; align-items: center; gap: 0.4rem; background: rgba(18, 24, 38, 0.9); padding: 0.35rem 0.65rem; border-radius: 8px; border: 1px solid var(--border-card);">
+            <span style="font-size: 0.68rem; font-weight: 700; color: var(--text-muted);">MODE:</span>
+            <select id="engine-mode-select" class="filter-select" style="padding: 0.3rem 0.5rem; font-size: 0.78rem; font-weight: 600; background: #0c1017; border-color: rgba(255,255,255,0.1); color: #fff; border-radius: 6px;">
+              <option value="email">✉️ Email + Mobile Outreach</option>
+              <option value="phone_only">📱 Mobile Phone Only Collector</option>
+            </select>
+          </div>
+
           <!-- Start / Stop Toggle Button -->
           <div class="toggle-container">
             <span class="toggle-label" id="toggle-label-text">SERVICE ENGINE:</span>

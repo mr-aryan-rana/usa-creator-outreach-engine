@@ -248,7 +248,8 @@ app.put('/api/states/:code', (req, res) => {
 // 5. Engine Start & Stop Controls API
 app.post('/api/engine/start', async (req, res) => {
   try {
-    engine.start();
+    const { mode } = req.body || {};
+    engine.start({ mode: mode || 'email' });
     res.json({ success: true, status: engine.getStatus() });
   } catch (err) {
     res.status(500).json({ success: false, error: err.message });

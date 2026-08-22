@@ -49,7 +49,13 @@ document.addEventListener("DOMContentLoaded", () => {
       tabPanes.forEach(pane => pane.classList.remove("active"));
 
       item.classList.add("active");
-      document.getElementById(targetTab).classList.add("active");
+      const targetPane = document.getElementById(targetTab);
+      if (targetPane) targetPane.classList.add("active");
+
+      if (targetTab === 'categories-tab') loadCategoriesGrid();
+      if (targetTab === 'campaigns-tab') loadCampaigns();
+      if (targetTab === 'states-tab') loadStatesGrid();
+      if (targetTab === 'creators-tab') loadCreatorsDB(currentPage);
     });
   });
 

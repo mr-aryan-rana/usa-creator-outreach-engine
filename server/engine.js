@@ -148,10 +148,26 @@ class AutomationEngine extends EventEmitter {
 
         if (this.state !== 'RUNNING') break;
 
+        // Pre-filter organic results to retain social profiles or snippets with email addresses
+        const relevantOrganic = (searchResult.organic || []).filter(item => {
+          const link = (item.link || '').toLowerCase();
+          const snippet = (item.snippet || '').toLowerCase();
+          const title = (item.title || '').toLowerCase();
+          const isSocial = link.includes('facebook.com') || link.includes('instagram.com') || link.includes('tiktok.com') || link.includes('youtube.com');
+          const hasEmail = snippet.includes('@') || title.includes('@');
+          return isSocial || hasEmail;
+        });
+
+        if (relevantOrganic.length === 0) {
+          this.log(`No social profiles or emails found in raw results for "${queryText}". Moving to next platform...`, 'info');
+          await this.sleep(1000);
+          continue;
+        }
+
         // 4. OpenAI GPT Filter & Extractor
-        this.log(`Submitting raw search snippets to OpenAI GPT-4o-mini for structured JSON extraction...`, 'action');
+        this.log(`Submitting ${relevantOrganic.length} relevant organic snippets to OpenAI GPT-4o-mini...`, 'action');
         const extractedCreators = await extractCreatorsFromSearch({
-          organic: searchResult.organic,
+          organic: relevantOrganic,
           platform: platform,
           targetState: stateObj.name
         });

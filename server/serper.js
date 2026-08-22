@@ -43,10 +43,10 @@ async function executeSerperSearch(queryText, numResults = 10) {
 
   let data = await response.json();
 
-  // If free account error 400, try clean fallback query without site: prefix
+  // If query pattern error 400, try clean fallback query retaining the platform domain (e.g. facebook.com "tag" "@gmail.com" "State")
   if (response.status === 400 && data.message && data.message.includes('Query pattern')) {
-    const fallbackQuery = queryText.replace(/^site:[^\s]+\s*/i, '').replace(/"/g, '');
-    console.log(`[SERPER FALLBACK] Trying clean fallback query: ${fallbackQuery}`);
+    const fallbackQuery = queryText.replace(/^site:/i, '');
+    console.log(`[SERPER FALLBACK] Trying clean platform fallback query: ${fallbackQuery}`);
     
     response = await fetch(url, {
       method: 'POST',

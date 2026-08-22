@@ -52,7 +52,15 @@ class AutomationEngine extends EventEmitter {
     this.emit('log', eventPayload);
   }
 
+  getMaxSerperCredits() {
+    if (this.mode === 'phone_only') {
+      return parseInt(process.env.PHONE_MODE_SERPER_LIMIT || '50');
+    }
+    return parseInt(process.env.EMAIL_MODE_SERPER_LIMIT || '100');
+  }
+
   getStatus() {
+    const maxSerper = this.getMaxSerperCredits();
     return {
       state: this.state,
       mode: this.mode,
@@ -60,7 +68,7 @@ class AutomationEngine extends EventEmitter {
       emailsSentToday: this.emailsSentToday,
       emailsSentInBatch: this.emailsSentInBatch,
       restSecondsRemaining: this.restSecondsRemaining,
-      maxSerperCreditsPerDay: parseInt(process.env.SERPER_DAILY_CREDIT_LIMIT || '150'),
+      maxSerperCreditsPerDay: maxSerper,
       maxEmailsPerDay: parseInt(process.env.EMAIL_DAILY_LIMIT || '200')
     };
   }
@@ -88,7 +96,8 @@ class AutomationEngine extends EventEmitter {
     this.currentCategoryIdx = Math.floor(Math.random() * CATEGORIES.length);
 
     this.state = 'RUNNING';
-    this.log(`Automation Engine STARTED in [${this.mode.toUpperCase()}] mode`, 'success');
+    const limit = this.getMaxSerperCredits();
+    this.log(`Automation Engine STARTED in [${this.mode.toUpperCase()}] mode (Credit Limit: ${limit}/day)`, 'success');
     this.loopPromise = this.runLoop();
   }
 
@@ -103,8 +112,9 @@ class AutomationEngine extends EventEmitter {
     while (this.state === 'RUNNING') {
       try {
         // 1. Quotas Verification
-        if (this.serperCreditsUsedToday >= this.maxSerperCreditsPerDay) {
-          this.log(`Daily Serper credit limit reached (${this.maxSerperCreditsPerDay}). Pausing engine for today.`, 'warn');
+        const maxSerperLimit = this.getMaxSerperCredits();
+        if (this.serperCreditsUsedToday >= maxSerperLimit) {
+          this.log(`Daily Serper credit limit reached for [${this.mode.toUpperCase()}] mode (${maxSerperLimit}). Pausing engine for today.`, 'warn');
           this.state = 'STOPPED';
           break;
         }

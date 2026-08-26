@@ -605,6 +605,41 @@ document.addEventListener("DOMContentLoaded", () => {
   // Event Listeners
   if (dbSearchInput) dbSearchInput.addEventListener("input", debounce(() => loadCreatorsDB(1), 300));
   if (dbContactFilter) dbContactFilter.addEventListener("change", () => loadCreatorsDB(1));
+  if (dbPlatformFilter) dbPlatformFilter.addEventListener("change", () => loadCreatorsDB(1));
+  if (dbStateFilter) dbStateFilter.addEventListener("change", () => loadCreatorsDB(1));
+
+  if (btnNextPage) {
+    btnNextPage.addEventListener("click", () => {
+      loadCreatorsDB(currentPage + 1);
+    });
+  }
+
+  if (btnPrevPage) {
+    btnPrevPage.addEventListener("click", () => {
+      if (currentPage > 1) {
+        loadCreatorsDB(currentPage - 1);
+      }
+    });
+  }
+
+  if (btnRefreshData) {
+    btnRefreshData.addEventListener("click", () => {
+      loadStats();
+      loadCreatorsDB(currentPage);
+    });
+  }
+
+  if (btnExportCsv) {
+    btnExportCsv.addEventListener("click", () => {
+      const search = dbSearchInput ? dbSearchInput.value : "";
+      const contactType = dbContactFilter ? dbContactFilter.value : "all";
+      const platform = dbPlatformFilter ? dbPlatformFilter.value : "";
+      const location = dbStateFilter ? dbStateFilter.value : "";
+
+      const url = `/api/export/csv?search=${encodeURIComponent(search)}&contact_type=${encodeURIComponent(contactType)}&platform=${encodeURIComponent(platform)}&location=${encodeURIComponent(location)}`;
+      window.location.href = url;
+    });
+  }
 
   function escapeHtml(str) {
     if (!str) return "";
@@ -629,6 +664,6 @@ document.addEventListener("DOMContentLoaded", () => {
   // Automatic 5-second poll timer to keep creator table & stats 100% updated in real-time
   setInterval(() => {
     loadStats();
-    if (currentPage === 1) loadCreatorsDB(1);
+    loadCreatorsDB(currentPage);
   }, 5000);
 });
